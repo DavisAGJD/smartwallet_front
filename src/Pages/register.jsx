@@ -85,7 +85,7 @@ export default function Register() {
             transition={{ delay: 0.3 }}
           >
             <div className="flex justify-between font-bold">
-              <img src="src/assets/Logo.png" alt="Logo" className="h-10 mb-4" />
+              <img src={Logo} alt="Logo" className="h-10 mb-4" />
               <h1 className="text-2xl font-bold text-gray-800">
                 Registrate
               </h1>
