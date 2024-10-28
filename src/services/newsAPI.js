@@ -8,7 +8,7 @@ const BASE_URL = `https://newsapi.org/v2/everything`;
  */
 export async function fetchArticles(keyword = "finance") {
     try {
-        const response = await fetch(`${BASE_URL}?q=${keyword}&apiKey=${API_KEY}`);
+        const response = await fetch(`${BASE_URL}?q=${keyword}&language=es&apiKey=${API_KEY}`);
         if (!response.ok) {
             throw new Error("Error fetching articles");
         }

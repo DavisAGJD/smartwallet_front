@@ -42,7 +42,13 @@ export default function UserOverviewPage() {
     const fetchIncome = async () => {
       try {
         const userIncome = await obtenerIngresoUsuario(token, usuario_id);
-        if (userIncome === null) {
+        // Mostrar el modal si no hay ingreso configurado
+
+        if (
+          userIncome === null ||
+          userIncome === undefined ||
+          userIncome <= 0
+        ) {
           setIsIncomeModalOpen(true);
         } else {
           setIncome(userIncome);
@@ -56,11 +62,9 @@ export default function UserOverviewPage() {
     const fetchExpenses = async () => {
       try {
         const expenses = await obtenerGastosPorUsuario(usuario_id, token);
-
         const sortedExpenses = expenses.sort(
           (a, b) => new Date(b.fecha) - new Date(a.fecha)
         );
-
         const groupedExpenses = sortedExpenses.reduce((acc, expense) => {
           const categoriaId = expense.categoria_gasto_id;
           const monto = parseFloat(expense.monto);
@@ -193,9 +197,7 @@ export default function UserOverviewPage() {
 
         {/* Tabla de Transacciones Recientes */}
         <div className="bg-white p-4 shadow-md rounded-lg">
-          <h2 className="text-lg font-semibold mb-4">
-            Gastos Recientes
-          </h2>
+          <h2 className="text-lg font-semibold mb-4">Gastos Recientes</h2>
           <div className="overflow-x-auto">
             <table className="min-w-full bg-white">
               <thead>

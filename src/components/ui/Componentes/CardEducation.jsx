@@ -1,10 +1,13 @@
 import PropTypes from "prop-types";
-import { Heart, BookmarkIcon } from "lucide-react";
-import { Button } from "../button";
 
-export default function CardEducation({ title, description, image, timeAgo, author, likes, url }) {
-
-
+export default function CardEducation({
+  title,
+  description,
+  image,
+  timeAgo,
+  author,
+  url,
+}) {
   return (
     <div className="w-full bg-white rounded-lg shadow-md overflow-hidden">
       {/* Imagen */}
@@ -23,17 +26,8 @@ export default function CardEducation({ title, description, image, timeAgo, auth
           <span>Por {author}</span>
         </div>
 
-        {/* Footer con botones */}
+        {/* Footer de ver mas */}
         <div className="flex justify-between items-center pt-4 border-t">
-          <div className="flex items-center space-x-2">
-            <Button variant="ghost" size="sm">
-              <Heart className="h-4 w-4 mr-1 text-red-500" />
-              <span>{likes}</span>
-            </Button>
-            <Button variant="ghost" size="sm">
-              <BookmarkIcon className="h-4 w-4 text-yellow-500" />
-            </Button>
-          </div>
           <a
             href={url}
             target="_blank"
@@ -42,7 +36,6 @@ export default function CardEducation({ title, description, image, timeAgo, auth
           >
             VER MÁS
           </a>
-
         </div>
       </div>
     </div>

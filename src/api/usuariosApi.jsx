@@ -35,7 +35,7 @@ export const obtenerIngresoUsuario = async (token, usuario_id) => {
       `${import.meta.env.VITE_API_URL}/ingresos/usuario/${usuario_id}`,
       { headers: { Authorization: `Bearer ${token}` } }
     );
-    return response.data.ingreso_mensual;
+    return response.data.ingresos;
   } catch (error) {
     console.error("Error al obtener ingreso:", error);
     throw error;

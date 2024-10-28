@@ -16,22 +16,20 @@ export default function EditModal({
 
   const handleSave = async () => {
     if (value !== confirmValue) {
-      setError(
-        "Los valores no coinciden. Por favor, verifica e intenta de nuevo."
-      );
+      setError("Los valores no coinciden. Por favor, verifica e intenta de nuevo.");
       return;
     }
 
-    let campoMapeado =
-      section.toLowerCase() === "correo" ? "email" : "password_usuario";
-    const payload = { [campoMapeado]: value };
+    const campoMapeado = section.toLowerCase() === "correo" ? "email" :
+      section.toLowerCase() === "ingresos" ? "ingresos" : "password_usuario";
+
+    const payload = { [campoMapeado]: section === "Ingresos" ? parseFloat(value) : value };
 
     try {
-      console.log("Datos de actualización (payload):", payload);
       const actualizado = await actualizarUsuario(usuarioId, payload);
       if (actualizado) {
         setError("");
-        onSaveSuccess(campoMapeado, value); // Asegúrate de pasar `campoMapeado` aquí
+        onSaveSuccess(campoMapeado, value);
         onClose();
       } else {
         setError("No se pudo actualizar el usuario.");

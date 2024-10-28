@@ -29,6 +29,7 @@ export default function UserConfigurations() {
     nombre: "Cargando...",
     email: "",
     password_usuario: "*****",
+    ingresos: 0,
     preferencias: {
       cuenta: "Básica",
     },
@@ -46,6 +47,7 @@ export default function UserConfigurations() {
             nombre: usuario.nombre_usuario,
             email: usuario.email,
             password_usuario: "*****",
+            ingresos: usuario.ingresos || 0,
             preferencias: {
               cuenta: usuario.tipo_suscripcion || "Básica",
             },
@@ -118,10 +120,11 @@ export default function UserConfigurations() {
               details={[
                 { label: "Correo", value: userProfile.email },
                 { label: "Contraseña", value: userProfile.password_usuario },
+                { label: "Ingresos", value: `$${userProfile.ingresos}` },
               ]}
               onEdit={(label) =>
                 openEditModal(
-                  label === "Correo" ? "correo" : "contraseña",
+                  label === "Correo" ? "email" : label.toLowerCase(),
                   userProfile[label.toLowerCase()]
                 )
               }
@@ -148,8 +151,8 @@ export default function UserConfigurations() {
           onClose={() => setEditModalOpen(false)}
           section={selectedSection || ""}
           initialValue={editValue}
-          usuarioId={usuarioId} // Pasar usuarioId al modal
-          onSaveSuccess={handleSaveChanges} // Pasar la función para actualizar el perfil
+          usuarioId={usuarioId}
+          onSaveSuccess={handleSaveChanges}
         />
 
         <PaymentModal
