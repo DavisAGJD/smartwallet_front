@@ -90,8 +90,8 @@ export default function GoalsPage() {
   };
 
   return (
-    <div className="flex h-screen">
-      <div className="w-64 bg-[#F5F5F5]">
+    <div className="flex h-screen bg-gray-100">
+      <div className="w-64 bg-[#F5F5F5] shadow-lg">
         <Sidebar />
       </div>
 
@@ -109,16 +109,19 @@ export default function GoalsPage() {
             <span className="font-semibold">Agregar meta</span>
           </button>
 
-          <div className="flex-auto justify-center min-h-screen bg-gray-100 mt-3">
-            <div className="bg-white p-4 rounded-lg shadow-lg">
-              {/* Renderizamos el componente de lista de metas */}
-              <MetasList
-                metas={metas}
-                onMetasUpdated={cargarMetas} // Pasar función para refrescar metas después de cambios
-                onAddAmount={handleAddAmount}
-                onEdit={handleEditMeta}
-                onDelete={handleDeleteMeta}
-              />
+          <div className="flex-1 p-6 overflow-y-auto">
+            <Header />
+            <div className="flex-auto mt-3 bg-gray-100 p-6">
+              <div className="bg-white p-4 rounded-lg shadow-lg">
+                {/* Renderizamos el componente de lista de metas */}
+                <MetasList
+                  metas={metas}
+                  onMetasUpdated={cargarMetas}
+                  onAddAmount={handleAddAmount}
+                  onEdit={handleEditMeta}
+                  onDelete={handleDeleteMeta}
+                />
+              </div>
             </div>
           </div>
         </div>
