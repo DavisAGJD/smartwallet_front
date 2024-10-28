@@ -1,7 +1,6 @@
 import { ChartBar, CreditCard, PiggyBank, ArrowRightLeft } from "lucide-react";
 import { useNavigate } from "react-router-dom"; // Importar useNavigate para redirigir al home
-import { ArrowLeft } from "lucide-react"; // Importar ícono de flecha
-import Navbar from "../Componentes/Navbar";
+import Navbar from "../components/ui/Componentes/Navbar";
 
 export default function HowItWorks() {
   const navigate = useNavigate(); // Hook para redirigir al home
