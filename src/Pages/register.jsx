@@ -1,24 +1,47 @@
-import React, { useState } from 'react'
-import { motion } from 'framer-motion'
-import { Route } from 'react-router-dom'
+import { useState } from "react";
+import { useNavigate, Link } from "react-router-dom"; // Para redirigir al usuario
+import { registerUsuario } from "../api/usuariosApi";
+import { motion } from "framer-motion";
+import Logo from "../assets/Logo.png"
 
 
 export default function Register() {
-  const [name, setName] = useState('')
-  const [email, setEmail] = useState('')
-  const [password, setPassword] = useState('')
-  const [confirmPassword, setConfirmPassword] = useState('')
+  const navigate = useNavigate(); // Para manejar la redirección
+  const [name, setName] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
+  const [error, setError] = useState(""); // Para manejar errores en el formulario
 
-  const handleSubmit = (e) => {
-    e.preventDefault()
-    // Lógica de registro aquí
-    console.log('Intento de registro con:', name, email, password, confirmPassword)
-  }
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+
+    // Validación de coincidencia de contraseñas
+    if (password !== confirmPassword) {
+      setError("Las contraseñas no coinciden.");
+      return;
+    }
+
+    try {
+      // Llamada a la API para registrar usuario
+      await registerUsuario({
+        nombre_usuario: name,
+        email,
+        password_usuario: password,
+      });
+
+      // Redirigir al usuario a la página de inicio de sesión
+      navigate("/login");
+    } catch (error) {
+      setError("Hubo un error al registrar el usuario.");
+      console.error("Error al registrar:", error);
+    }
+  };
 
   const fadeIn = {
     hidden: { opacity: 0, y: 20 },
-    visible: { opacity: 1, y: 0 }
-  }
+    visible: { opacity: 1, y: 0 },
+  };
 
   return (
     <div className="flex min-h-screen bg-gradient-to-br from-green-100 to-green-200">
@@ -43,7 +66,9 @@ export default function Register() {
             transition={{ delay: 0.2, duration: 0.5 }}
           >
             <h2 className="text-3xl font-bold mb-2">Ahorro Inteligente</h2>
-            <p className="text-lg">Ilumina tu futuro financiero con SmartWallet</p>
+            <p className="text-lg">
+              Ilumina tu futuro financiero con SmartWallet
+            </p>
           </motion.div>
         </motion.div>
         <motion.div
@@ -59,12 +84,30 @@ export default function Register() {
             animate="visible"
             transition={{ delay: 0.3 }}
           >
-            <img src="../img/Logo.jpg" alt="Logo de SmartWallet" className="h-10 mb-4" />
-            <h1 className="text-2xl font-bold text-gray-800">Registrar cuenta</h1>
+            <div className="flex justify-between font-bold">
+              <img src="src/assets/Logo.png" alt="Logo" className="h-10 mb-4" />
+              <h1 className="text-2xl font-bold text-gray-800">
+                Registrate
+              </h1>
+              <Link to="/" className="text-xl">
+                X
+              </Link>
+            </div>
           </motion.div>
+          {error && <p className="text-red-500 mb-4">{error}</p>}
           <form onSubmit={handleSubmit} className="space-y-4">
-            <motion.div variants={fadeIn} initial="hidden" animate="visible" transition={{ delay: 0.4 }}>
-              <label htmlFor="name" className="block text-sm font-medium text-gray-700">Nombre</label>
+            <motion.div
+              variants={fadeIn}
+              initial="hidden"
+              animate="visible"
+              transition={{ delay: 0.4 }}
+            >
+              <label
+                htmlFor="name"
+                className="block text-sm font-medium text-gray-700"
+              >
+                Nombre
+              </label>
               <input
                 id="name"
                 type="text"
@@ -75,8 +118,18 @@ export default function Register() {
                 focus:outline-none focus:border-green-500 focus:ring-1 focus:ring-green-500"
               />
             </motion.div>
-            <motion.div variants={fadeIn} initial="hidden" animate="visible" transition={{ delay: 0.5 }}>
-              <label htmlFor="email" className="block text-sm font-medium text-gray-700">Email</label>
+            <motion.div
+              variants={fadeIn}
+              initial="hidden"
+              animate="visible"
+              transition={{ delay: 0.5 }}
+            >
+              <label
+                htmlFor="email"
+                className="block text-sm font-medium text-gray-700"
+              >
+                Email
+              </label>
               <input
                 id="email"
                 type="email"
@@ -87,8 +140,18 @@ export default function Register() {
                 focus:outline-none focus:border-green-500 focus:ring-1 focus:ring-green-500"
               />
             </motion.div>
-            <motion.div variants={fadeIn} initial="hidden" animate="visible" transition={{ delay: 0.6 }}>
-              <label htmlFor="password" className="block text-sm font-medium text-gray-700">Contraseña</label>
+            <motion.div
+              variants={fadeIn}
+              initial="hidden"
+              animate="visible"
+              transition={{ delay: 0.6 }}
+            >
+              <label
+                htmlFor="password"
+                className="block text-sm font-medium text-gray-700"
+              >
+                Contraseña
+              </label>
               <input
                 id="password"
                 type="password"
@@ -99,8 +162,18 @@ export default function Register() {
                 focus:outline-none focus:border-green-500 focus:ring-1 focus:ring-green-500"
               />
             </motion.div>
-            <motion.div variants={fadeIn} initial="hidden" animate="visible" transition={{ delay: 0.7 }}>
-              <label htmlFor="confirmPassword" className="block text-sm font-medium text-gray-700">Confirmar contraseña</label>
+            <motion.div
+              variants={fadeIn}
+              initial="hidden"
+              animate="visible"
+              transition={{ delay: 0.7 }}
+            >
+              <label
+                htmlFor="confirmPassword"
+                className="block text-sm font-medium text-gray-700"
+              >
+                Confirmar contraseña
+              </label>
               <input
                 id="confirmPassword"
                 type="password"
@@ -111,7 +184,12 @@ export default function Register() {
                 focus:outline-none focus:border-green-500 focus:ring-1 focus:ring-green-500"
               />
             </motion.div>
-            <motion.div variants={fadeIn} initial="hidden" animate="visible" transition={{ delay: 0.8 }}>
+            <motion.div
+              variants={fadeIn}
+              initial="hidden"
+              animate="visible"
+              transition={{ delay: 0.8 }}
+            >
               <button
                 type="submit"
                 className="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-green-500 hover:bg-green-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500"
@@ -121,30 +199,22 @@ export default function Register() {
             </motion.div>
           </form>
           <motion.div
-            className="mt-4"
-            variants={fadeIn}
-            initial="hidden"
-            animate="visible"
-            transition={{ delay: 0.9 }}
-          >
-            <button
-              className="w-full flex justify-center py-2 px-4 border border-green-500 rounded-md shadow-sm text-sm font-medium text-green-500 bg-white hover:bg-green-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500"
-            >
-              <img src="https://www.svgrepo.com/show/2778/google.svg" alt="Logo de Google" className="mr-2 h-5 w-5" />
-              Registrarse con Google
-            </button>
-          </motion.div>
-          <motion.div
             className="mt-6 text-center text-sm text-gray-600"
             variants={fadeIn}
             initial="hidden"
             animate="visible"
             transition={{ delay: 1 }}
           >
-            ¿Ya tienes una cuenta? <a href="/login" className="font-medium text-green-600 hover:underline">Iniciar sesión</a>
+            ¿Ya tienes una cuenta?{" "}
+            <a
+              href="/login"
+              className="font-medium text-green-600 hover:underline"
+            >
+              Iniciar sesión
+            </a>
           </motion.div>
         </motion.div>
       </div>
     </div>
-  )
+  );
 }

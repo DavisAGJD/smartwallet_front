@@ -8,38 +8,37 @@ export default function HowItWorks() {
   const features = [
     {
       icon: <ChartBar className="h-8 w-8 text-teal-600" />,
-      title: "Track Your Spending",
-      description: "Easily monitor your expenses across all your accounts in real-time.",
+      title: "Realice un seguimiento de sus gastos",
+      description: "Supervise fácilmente sus gastos en tiempo real.",
     },
     {
       icon: <CreditCard className="h-8 w-8 text-teal-600" />,
-      title: "Manage Credit Cards",
-      description: "View all your credit card balances and due dates in one place.",
+      title: "Escaneo de tickets",
+      description: "Registrar tus tickets en cuestión de segundos"
     },
     {
       icon: <PiggyBank className="h-8 w-8 text-teal-600" />,
-      title: "Set Savings Goals",
-      description: "Create and track savings goals for your future plans.",
+      title: "Establezca metas de ahorro",
+      description: "Establece metas de ahorro para su futuro y recibe alertas cuando se alcancen.",
     },
     {
       icon: <ArrowRightLeft className="h-8 w-8 text-teal-600" />,
-      title: "Smart Budgeting",
-      description: "Get personalized budget recommendations based on your spending habits.",
+      title: "Presupuesto inteligente",
+      description: "Obtenga recomendaciones de presupuesto personalizadas basadas en sus hábitos de gasto.",
     },
   ];
 
   return (
     <div>
       <Navbar />
-      <section className="bg-gray-50 py-16">
+      <section className=" py-16">
         {/* Flecha de retorno */}
 
 
         <div className="container mx-auto px-4">
-          <h2 className="text-3xl font-bold text-center text-gray-900 mb-8">How SmartWallet Works</h2>
+          <h2 className="text-3xl font-bold text-center text-gray-900 mb-8">¿Cómo funciona SmartWallet?</h2>
           <p className="text-center text-gray-600 max-w-2xl mx-auto mb-12">
-            SmartWallet simplifies your financial life by providing powerful tools to manage your money effectively.
-            Here's how our app helps you take control of your finances:
+            SmartWallet simplifica su vida financiera al brindarle herramientas poderosas para administrar su dinero de manera efectiva. Así es como nuestra aplicación te ayuda a tomar el control de tus finanzas:
           </p>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
             {features.map((feature, index) => (
@@ -55,15 +54,15 @@ export default function HowItWorks() {
             ))}
           </div>
           <div className="mt-16 text-center">
-            <h3 className="text-2xl font-bold text-gray-900 mb-4">Ready to take control of your finances?</h3>
+            <h3 className="text-2xl font-bold text-gray-900 mb-4">¿Listo para tomar el control de tus finanzas?</h3>
             <p className="text-gray-600 mb-8">
-              Join thousands of users who have already transformed their financial lives with SmartWallet.
+              Únase a miles de usuarios que ya han transformado sus vidas financieras con SmartWallet.
             </p>
             <button
               className="bg-teal-600 hover:bg-teal-700 text-white font-bold py-3 px-6 rounded-lg transition duration-300"
               onClick={() => navigate('/register')} // Redirigir a la página de registro
             >
-              Get Started for Free
+              Comience gratis ahora
             </button>
           </div>
         </div>
