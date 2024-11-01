@@ -20,7 +20,7 @@ export default function Footer() {
             {/* Full-Width Footer */}
             <footer
                 aria-label="Footer"
-                className={`flex items-center justify-between px-8 py-6 bg-white bg-opacity-70 shadow-sm transition-all duration-300 ${isHovered ? 'opacity-100' : 'opacity-0'
+                className={`flex items-center justify-between px-8 py-6 bg-white bg-opacity-95 shadow-sm transition-all duration-300 ${isHovered ? 'opacity-100' : 'opacity-0'
                     }`}
                 style={{ height: isHovered ? 'auto' : '0', overflow: 'hidden' }}
             >
