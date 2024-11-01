@@ -14,6 +14,10 @@ export default function AdminReportsPage() {
   const [isConfirmModalOpen, setIsConfirmModalOpen] = useState(false);
   const [reportToDelete, setReportToDelete] = useState(null);
 
+  // Estados de paginación
+  const [currentPage, setCurrentPage] = useState(1);
+  const reportsPerPage = 5;
+
   // Obtener los reportes desde el backend
   useEffect(() => {
     const fetchReports = async () => {
@@ -41,6 +45,7 @@ export default function AdminReportsPage() {
     } else {
       setFilteredReports(reports);
     }
+    setCurrentPage(1); // Reiniciar la página cuando se realiza una búsqueda
   };
 
   // Función para abrir el modal de confirmación de eliminación
@@ -73,6 +78,15 @@ export default function AdminReportsPage() {
     }
   };
 
+  // Configuración de paginación
+  const indexOfLastReport = currentPage * reportsPerPage;
+  const indexOfFirstReport = indexOfLastReport - reportsPerPage;
+  const currentReports = filteredReports.slice(indexOfFirstReport, indexOfLastReport);
+
+  const paginate = (pageNumber) => setCurrentPage(pageNumber);
+
+  const totalPages = Math.ceil(filteredReports.length / reportsPerPage);
+
   return (
     <div className="flex h-screen bg-gray-100">
       <SidebarAdmin />
@@ -87,7 +101,7 @@ export default function AdminReportsPage() {
             <div className="relative">
               <Input
                 type="text"
-                placeholder="Buscar reporte..."
+                placeholder="Buscar reporte por título..."
                 className="w-full px-4 py-2 border rounded-lg"
                 value={searchTerm}
                 onChange={handleSearch}
@@ -95,9 +109,9 @@ export default function AdminReportsPage() {
             </div>
           </div>
 
-          <ScrollArea className="h-[calc(100vh-200px)]">
+          <ScrollArea className="h-[calc(100vh-300px)]">
             <div className="space-y-4">
-              {filteredReports.map((report) => (
+              {currentReports.map((report) => (
                 <CardReport
                   key={report.reporte_id} // Usa un ID único
                   titulo={report.titulo}
@@ -106,11 +120,26 @@ export default function AdminReportsPage() {
                   onDelete={() => openConfirmModal(report.reporte_id)} // Abre el modal de confirmación
                 />
               ))}
-              {filteredReports.length === 0 && (
+              {currentReports.length === 0 && (
                 <p>No se encontraron reportes</p>
               )}
             </div>
           </ScrollArea>
+
+          {/* Paginación */}
+          <div className="flex justify-center mt-4 space-x-2">
+            {[...Array(totalPages)].map((_, index) => (
+              <button
+                key={index + 1}
+                onClick={() => paginate(index + 1)}
+                className={`px-3 py-1 rounded-md ${
+                  currentPage === index + 1 ? "bg-blue-500 text-white" : "bg-gray-200"
+                }`}
+              >
+                {index + 1}
+              </button>
+            ))}
+          </div>
         </div>
 
         {/* Modal de confirmación */}

@@ -14,6 +14,15 @@ export default function MetasList({ metas, onMetasUpdated }) {
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
   const [metaToDelete, setMetaToDelete] = useState(null);
 
+  // Paginación
+  const [currentPage, setCurrentPage] = useState(1);
+  const itemsPerPage = 4;
+
+  // Calcula las metas actuales para la página actual
+  const indexOfLastItem = currentPage * itemsPerPage;
+  const indexOfFirstItem = indexOfLastItem - itemsPerPage;
+  const currentMetas = metas.slice(indexOfFirstItem, indexOfLastItem);
+
   const handleAddAmountClick = (meta_id) => {
     const meta = metas.find((m) => m.meta_id === meta_id);
     setSelectedMeta(meta);
@@ -71,17 +80,37 @@ export default function MetasList({ metas, onMetasUpdated }) {
     }
   };
 
+  // Función para cambiar de página
+  const paginate = (pageNumber) => setCurrentPage(pageNumber);
+
   return (
-    <div className="flex flex-wrap gap-4">
-      {metas.map((meta) => (
-        <CardMeta
-          key={meta.meta_id}
-          meta={meta}
-          onAddAmount={handleAddAmountClick}
-          onEdit={handleEditMetaClick}
-          onDelete={handleDeleteMetaClick}
-        />
-      ))}
+    <div>
+      <div className="flex flex-wrap gap-4">
+        {currentMetas.map((meta) => (
+          <CardMeta
+            key={meta.meta_id}
+            meta={meta}
+            onAddAmount={handleAddAmountClick}
+            onEdit={handleEditMetaClick}
+            onDelete={handleDeleteMetaClick}
+          />
+        ))}
+      </div>
+
+      {/* Paginación */}
+      <div className="flex justify-center mt-4">
+        {Array.from({ length: Math.ceil(metas.length / itemsPerPage) }, (_, i) => (
+          <button
+            key={i}
+            onClick={() => paginate(i + 1)}
+            className={`px-3 py-1 mx-1 rounded-md ${
+              currentPage === i + 1 ? "bg-blue-500 text-white" : "bg-gray-200"
+            }`}
+          >
+            {i + 1}
+          </button>
+        ))}
+      </div>
 
       {/* Modal para añadir monto */}
       {isAddAmountModalOpen && selectedMeta && (
