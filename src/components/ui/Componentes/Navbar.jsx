@@ -19,8 +19,8 @@ export default function Navbar() {
                 </nav>
                 <div className="flex items-center space-x-4">
                     {/* Redirección al registro y login */}
-                    <Button variant="outline" size="sm" onClick={() => navigate('/register')}>Sign up</Button>
-                    <Button variant="default" size="sm" onClick={() => navigate('/login')}>Sign in</Button>
+
+                    <Button variant="default" size="sm" onClick={() => navigate('/login')}>Inicia Sesión</Button>
                 </div>
             </header>
         </div>

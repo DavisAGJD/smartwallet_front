@@ -1,10 +1,11 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Link, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { ChevronRight, Users, BookOpen, BarChart3 } from 'lucide-react';
 import { motion } from 'framer-motion';
 import Navbar from '../components/ui/Componentes/Navbar';
 import InfoModal from '../components/ui/Componentes/Modales/InfoModal'; // Importar el modal
+import Footer from '../components/ui/Componentes/Footer';
 
 export default function AboutSection() {
   const navigate = useNavigate();
@@ -65,7 +66,9 @@ export default function AboutSection() {
               modalContent="Nuestro equipo está compuesto por expertos en tecnología y finanzas comprometidos en ofrecer las mejores experiencias y productos a nuestros usuarios."
             />
           </div>
+
         </motion.div>
+        <Footer />
       </section>
     </div>
   );

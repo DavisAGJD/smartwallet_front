@@ -2,8 +2,7 @@ import { useState } from "react";
 import { useNavigate, Link } from "react-router-dom"; // Para redirigir al usuario
 import { registerUsuario } from "../api/usuariosApi";
 import { motion } from "framer-motion";
-import Logo from "../assets/Logo.png"
-
+import Logo from "../assets/Logo.png";
 
 export default function Register() {
   const navigate = useNavigate(); // Para manejar la redirección
@@ -71,14 +70,15 @@ export default function Register() {
             </p>
           </motion.div>
         </motion.div>
+
         <motion.div
-          className="md:w-1/2 bg-white p-8"
+          className="md:w-1/2 bg-white p-8 relative flex flex-col items-center"
           initial={{ opacity: 0, x: 50 }}
           animate={{ opacity: 1, x: 0 }}
           transition={{ duration: 0.5, delay: 0.2 }}
         >
           <motion.div
-            className="mb-8"
+            className="mb-8 w-full"
             variants={fadeIn}
             initial="hidden"
             animate="visible"
@@ -86,16 +86,25 @@ export default function Register() {
           >
             <div className="flex justify-between font-bold">
               <img src={Logo} alt="Logo" className="h-10 mb-4" />
-              <h1 className="text-2xl font-bold text-gray-800">
-                Registrate
-              </h1>
+              <h1 className="text-2xl font-bold text-gray-800">Registrate</h1>
               <Link to="/" className="text-xl">
                 X
               </Link>
             </div>
           </motion.div>
+
+          <motion.div
+            className="absolute bottom-8 text-center text-3xl text-gray-300 font-bold opacity-20 select-none"
+            variants={fadeIn}
+            initial="hidden"
+            animate="visible"
+            transition={{ delay: 0.9 }}
+          >
+            SMARTWALLET
+          </motion.div>
+
           {error && <p className="text-red-500 mb-4">{error}</p>}
-          <form onSubmit={handleSubmit} className="space-y-4">
+          <form onSubmit={handleSubmit} className="space-y-4 w-full">
             <motion.div
               variants={fadeIn}
               initial="hidden"
@@ -213,6 +222,7 @@ export default function Register() {
               Iniciar sesión
             </a>
           </motion.div>
+
         </motion.div>
       </div>
     </div>

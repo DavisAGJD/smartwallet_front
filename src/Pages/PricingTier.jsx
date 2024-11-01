@@ -3,23 +3,22 @@ import { useState } from 'react';
 import PropTypes from 'prop-types';
 import { useNavigate } from 'react-router-dom';
 import Navbar from '../components/ui/Componentes/Navbar';
-import PaymentModal from '../components/ui/Componentes/Modales/PaymentModal'; // Importa el Modal de Pago
+import PaymentModal from '../components/ui/Componentes/Modales/PaymentModal';
+import Footer from '../components/ui/Componentes/Footer';
 
 const PricingTier = ({ name, price, features, recommended, onSelect }) => {
   const navigate = useNavigate();
 
   const handleButtonClick = () => {
     if (name === 'Gratis') {
-      // Redirigir a la página de registro si el paquete es gratuito
       navigate('/register');
     } else {
-      // Abrir el modal de pago si no es el paquete gratuito
       onSelect();
     }
   };
 
   return (
-    <div className={`flex flex-col p-2 bg-white rounded-lg shadow-md ${recommended ? 'border-2 border-green-500' : ''}`}>
+    <div className={`flex flex-col p-4 bg-white rounded-lg shadow-md ${recommended ? 'border-2 border-green-500' : ''}`}>
       <h3 className="text-2xl font-bold text-gray-900">{name}</h3>
       <div className="mt-4 text-green-600 text-5xl font-bold">
         ${price}
@@ -107,9 +106,9 @@ export default function Component() {
   ];
 
   return (
-    <div>
+    <div className="flex flex-col min-h-screen">
       <Navbar />
-      <div className="min-h-screen py-12 px-4 sm:px-6 lg:px-8">
+      <div className="flex-grow py-12 px-4 sm:px-6 lg:px-8">
         <div className="max-w-7xl mx-auto">
           <div className="text-center">
             <h2 className="text-4xl font-bold text-gray-800 sm:text-5xl">
@@ -142,6 +141,8 @@ export default function Component() {
         packageName={selectedPackage.name}
         price={selectedPackage.price}
       />
+
+      <Footer />
     </div>
   );
 }

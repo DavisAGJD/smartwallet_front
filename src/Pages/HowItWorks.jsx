@@ -1,6 +1,7 @@
 import { ChartBar, CreditCard, PiggyBank, ArrowRightLeft } from "lucide-react";
 import { useNavigate } from "react-router-dom"; // Importar useNavigate para redirigir al home
 import Navbar from "../components/ui/Componentes/Navbar";
+import Footer from "../components/ui/Componentes/Footer";
 
 export default function HowItWorks() {
   const navigate = useNavigate(); // Hook para redirigir al home
@@ -67,6 +68,7 @@ export default function HowItWorks() {
           </div>
         </div>
       </section>
+      <Footer />
     </div>
 
   );
