@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import SidebarAdmin from "../components/ui/Componentes/SidebarAdmin";
-import Header from "../components/ui/Componentes/Header";
+import HeaderAdmin from "../components/ui/Componentes/HeaderAdmin";
 import { obtenerUsuarios, eliminarUsuario } from "../api/usuariosApi";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "../components/ui/Componentes/table";
 import { Button } from "../components/ui/button";
@@ -88,7 +88,7 @@ export default function UserManagementPage() {
       <SidebarAdmin />
 
       <main className="flex-1 p-8">
-        <Header />
+        <HeaderAdmin />
 
         <div className="flex justify-between items-center mb-6">
           <h1 className="text-2xl font-bold">Gestión de Usuarios</h1>

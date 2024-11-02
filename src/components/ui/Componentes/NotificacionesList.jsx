@@ -54,7 +54,7 @@ export default function NotificacionesList({
   };
 
   return (
-    <div className="w-full max-w-3xl bg-white rounded-lg shadow-lg overflow-y-auto h-full p-6">
+    <div className="w-full bg-white rounded-lg shadow-lg overflow-y-auto h-full p-6">
       {" "}
       {/* Ajuste de altura completa */}
       {notificaciones.length === 0 ? (

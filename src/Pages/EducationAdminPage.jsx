@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { Button } from "../components/ui/button";
 import ScrollArea from "../components/ui/Componentes/scroll-area";
-import Header from "../components/ui/Componentes/Header";
+import HeaderAdmin from "../components/ui/Componentes/HeaderAdmin";
 import SidebarAdmin from "../components/ui/Componentes/SidebarAdmin";
 import CardEducation from "../components/ui/Componentes/CardEducation";
 import { fetchArticles } from "../services/newsAPI";
@@ -29,7 +29,7 @@ export default function EducationAdminPage() {
     <div className="flex h-screen bg-gray-100">
       <SidebarAdmin />
       <main className="flex-1 p-6">
-        <Header />
+        <HeaderAdmin />
         <div className="mb-6">
           <h1 className="text-2xl font-bold text-green-700">Educación</h1>
           <div className="mt-2">

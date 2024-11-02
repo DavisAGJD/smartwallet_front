@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { obtenerInfoUsuarios } from "../api/usuariosApi";
 import SidebarAdmin from "../components/ui/Componentes/SidebarAdmin";
-import Header from "../components/ui/Componentes/Header";
+import HeaderAdmin from "../components/ui/Componentes/HeaderAdmin";
 import {
   LineChart,
   Line,
@@ -43,7 +43,7 @@ export default function AdminOverviewPage() {
       <SidebarAdmin />
 
       <main className="flex-1 p-8">
-        <Header />
+        <HeaderAdmin />
 
         <div className="flex justify-between items-center mb-6">
           <h1 className="text-2xl font-bold">Dashboard</h1>

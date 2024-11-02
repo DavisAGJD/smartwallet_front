@@ -17,138 +17,181 @@ import ProtectedRoute from "../src/components/ui/Componentes/Protected/Protected
 import AboutSection from "./Pages/AboutSection";
 import EducationAdminPage from "./Pages/EducationAdminPage";
 import UserConfigurations from "./Pages/UserConfigurations";
-import ExpenseCategories from "./Pages/ExpenseCategories"; // Nueva importación
-import GoalsManagement from "./Pages/GoalsManagement"; // Nueva importación para la gestión de metas
+import ExpenseCategories from "./Pages/ExpenseCategories";
+import GoalsManagement from "./Pages/GoalsManagement";
 import AnalysisPage from "./Pages/AnalysisPage";
 import RemindersPage from "./Pages/RemindersPage";
 import NotificationsPage from "./Pages/NotificationPage";
+import { NotificationProvider } from "./context/NotificationProvider";
+import GlobalNotification from "./components/ui/Componentes/GlobalNotification";
+import { AuthProvider } from "./context/AuthContext";
 
 function App() {
   return (
-    <Router>
-      <Routes>
-        {/* Rutas públicas */}
-        <Route path="/" element={<HomePage />} />
-        <Route path="/login" element={<Login />} />
-        <Route path="/register" element={<Register />} />
-        <Route path="/how-it-works" element={<HowItWorks />} />
-        <Route path="/prices" element={<PricingTier />} />
-        <Route path="/about-us" element={<AboutSection />} />
+    <AuthProvider>
+      <Router>
+        <Routes>
+          {/* Rutas públicas */}
+          <Route path="/" element={<HomePage />} />
+          <Route path="/login" element={<Login />} />
+          <Route path="/register" element={<Register />} />
+          <Route path="/how-it-works" element={<HowItWorks />} />
+          <Route path="/prices" element={<PricingTier />} />
+          <Route path="/about-us" element={<AboutSection />} />
 
-        {/* Rutas protegidas para usuarios regulares */}
-        <Route
-          path="/goals"
-          element={
-            <ProtectedRoute requiredRole="usuario">
-              <GoalsPage />
-            </ProtectedRoute>
-          }
-        />
-        <Route
-          path="/analysis"
-          element={
-            <ProtectedRoute requiredRole="usuario">
-              <AnalysisPage />
-            </ProtectedRoute>
-          }
-        />
-        <Route
-          path="/reminders"
-          element={
-            <ProtectedRoute requiredRole="usuario">
-              <RemindersPage />
-            </ProtectedRoute>
-          }
-        />
-        <Route
-          path="/notifications"
-          element={
-            <ProtectedRoute requiredRole="usuario">
-              <NotificationsPage />
-            </ProtectedRoute>
-          }
-        />
-        <Route path="/expenses" element={<ExpensesPage />} />
-        <Route
-          path="/reports"
-          element={
-            <ProtectedRoute requiredRole="usuario">
-              <ReportsPage />
-            </ProtectedRoute>
-          }
-        />
-        <Route
-          path="/education"
-          element={
-            <ProtectedRoute requiredRole="usuario">
-              <EducationPage />
-            </ProtectedRoute>
-          }
-        />
-        <Route
-          path="/user-overview"
-          element={
-            <ProtectedRoute requiredRole="usuario">
-              <UserOverviewPage />
-            </ProtectedRoute>
-          }
-        />
-        <Route
-          path="/user-configuration"
-          element={
-            <ProtectedRoute requiredRole="usuario">
-              <UserConfigurations />
-            </ProtectedRoute>
-          }
-        />
+          {/* Rutas de usuario, cada una envuelta en NotificationProvider y GlobalNotification */}
+          <Route
+            path="/goals"
+            element={
+              <NotificationProvider>
+                <GlobalNotification />
+                <ProtectedRoute requiredRole="usuario">
+                  <GoalsPage />
+                </ProtectedRoute>
+              </NotificationProvider>
+            }
+          />
+          <Route
+            path="/analysis"
+            element={
+              <NotificationProvider>
+                <GlobalNotification />
+                <ProtectedRoute requiredRole="usuario">
+                  <AnalysisPage />
+                </ProtectedRoute>
+              </NotificationProvider>
+            }
+          />
+          <Route
+            path="/reminders"
+            element={
+              <NotificationProvider>
+                <GlobalNotification />
+                <ProtectedRoute requiredRole="usuario">
+                  <RemindersPage />
+                </ProtectedRoute>
+              </NotificationProvider>
+            }
+          />
+          <Route
+            path="/notifications"
+            element={
+              <NotificationProvider>
+                <GlobalNotification />
+                <ProtectedRoute requiredRole="usuario">
+                  <NotificationsPage />
+                </ProtectedRoute>
+              </NotificationProvider>
+            }
+          />
+          <Route
+            path="/expenses"
+            element={
+              <NotificationProvider>
+                <GlobalNotification />
+                <ProtectedRoute requiredRole="usuario">
+                  <ExpensesPage />
+                </ProtectedRoute>
+              </NotificationProvider>
+            }
+          />
+          <Route
+            path="/reports"
+            element={
+              <NotificationProvider>
+                <GlobalNotification />
+                <ProtectedRoute requiredRole="usuario">
+                  <ReportsPage />
+                </ProtectedRoute>
+              </NotificationProvider>
+            }
+          />
+          <Route
+            path="/education"
+            element={
+              <NotificationProvider>
+                <GlobalNotification />
+                <ProtectedRoute requiredRole="usuario">
+                  <EducationPage />
+                </ProtectedRoute>
+              </NotificationProvider>
+            }
+          />
+          <Route
+            path="/user-overview"
+            element={
+              <NotificationProvider>
+                <GlobalNotification />
+                <ProtectedRoute requiredRole="usuario">
+                  <UserOverviewPage />
+                </ProtectedRoute>
+              </NotificationProvider>
+            }
+          />
+          <Route
+            path="/user-configuration"
+            element={
+              <NotificationProvider>
+                <GlobalNotification />
+                <ProtectedRoute requiredRole="usuario">
+                  <UserConfigurations />
+                </ProtectedRoute>
+              </NotificationProvider>
+            }
+          />
 
-        {/* Rutas protegidas para administradores */}
-        <Route path="/admin-overview" element={<AdminOverviewPage />} />
-        <Route
-          path="/user-management"
-          element={
-            <ProtectedRoute requiredRole="admin">
-              <UserManagementPage />
-            </ProtectedRoute>
-          }
-        />
-        <Route
-          path="/admin-reports"
-          element={
-            <ProtectedRoute requiredRole="admin">
-              <AdminReportsPage />
-            </ProtectedRoute>
-          }
-        />
-        <Route
-          path="/admin-education"
-          element={
-            <ProtectedRoute requiredRole="admin">
-              <EducationAdminPage />
-            </ProtectedRoute>
-          }
-        />
-        {/* Ruta para la gestión de categorías de gastos */}
-        <Route
-          path="/expense-categories" // Ruta para la gestión de categorías
-          element={
-            <ProtectedRoute requiredRole="admin">
-              <ExpenseCategories />
-            </ProtectedRoute>
-          }
-        />
-
-        {/* Ruta para la gestión de metas */}
-        <Route
-          path="/goals-management" // Nueva ruta para la gestión de metas
-          element={
-            <ProtectedRoute requiredRole="admin">
-              <GoalsManagement />
-            </ProtectedRoute>
-          }
-        />
-      </Routes>
-    </Router>
+          {/* Rutas protegidas para administradores */}
+          <Route
+            path="/admin-overview"
+            element={
+              <ProtectedRoute requiredRole="admin">
+                <AdminOverviewPage />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/user-management"
+            element={
+              <ProtectedRoute requiredRole="admin">
+                <UserManagementPage />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/admin-reports"
+            element={
+              <ProtectedRoute requiredRole="admin">
+                <AdminReportsPage />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/admin-education"
+            element={
+              <ProtectedRoute requiredRole="admin">
+                <EducationAdminPage />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/expense-categories"
+            element={
+              <ProtectedRoute requiredRole="admin">
+                <ExpenseCategories />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/goals-management"
+            element={
+              <ProtectedRoute requiredRole="admin">
+                <GoalsManagement />
+              </ProtectedRoute>
+            }
+          />
+        </Routes>
+      </Router>
+    </AuthProvider>
   );
 }
 

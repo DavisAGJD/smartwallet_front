@@ -14,6 +14,8 @@ export default function ReportsPage() {
   const [isAddReportModalOpen, setIsAddReportModalOpen] = useState(false);
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
   const [reportes, setReportes] = useState([]);
+  const [filteredReportes, setFilteredReportes] = useState([]); // Para almacenar los reportes filtrados
+  const [searchTerm, setSearchTerm] = useState(""); // Estado para el término de búsqueda
   const [reporteAEliminar, setReporteAEliminar] = useState(null);
 
   // Obtener usuario_id del token
@@ -33,6 +35,7 @@ export default function ReportsPage() {
     try {
       const usuarioReports = await obtenerReportesPorUsuario(token, usuario_id);
       setReportes(usuarioReports);
+      setFilteredReportes(usuarioReports); // Inicializa los reportes filtrados
     } catch (error) {
       console.error("Error al cargar reportes:", error);
     }
@@ -71,6 +74,16 @@ export default function ReportsPage() {
     }
   };
 
+  // Función para manejar el cambio en el campo de búsqueda
+  const handleSearchChange = (event) => {
+    const searchValue = event.target.value.toLowerCase();
+    setSearchTerm(searchValue);
+    const filtered = reportes.filter((reporte) =>
+      reporte.titulo.toLowerCase().includes(searchValue)
+    );
+    setFilteredReportes(filtered);
+  };
+
   return (
     <div className="flex h-screen bg-gray-100">
       <Sidebar />
@@ -87,9 +100,21 @@ export default function ReportsPage() {
               Añadir Reporte
             </Button>
           </div>
+
+          {/* Campo de búsqueda */}
+          <div className="mb-4">
+            <input
+              type="text"
+              placeholder="Buscar reporte por título..."
+              value={searchTerm}
+              onChange={handleSearchChange}
+              className="w-full p-2 border rounded-lg"
+            />
+          </div>
+
           <ScrollArea className="h-[calc(100vh-200px)]">
             <div className="space-y-4">
-              {reportes.map((reporte) => (
+              {filteredReportes.map((reporte) => (
                 <CardReport
                   key={reporte.reporte_id}
                   titulo={reporte.titulo}

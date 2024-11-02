@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { Plus, Pencil, Trash2, Check, X } from 'lucide-react';
-import Header from "../components/ui/Componentes/Header";
+import HeaderAdmin from "../components/ui/Componentes/HeaderAdmin";
 import SidebarAdmin from "../components/ui/Componentes/SidebarAdmin";
 import { Button } from "../components/ui/button";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "../components/ui/Componentes/table";
@@ -64,7 +64,7 @@ export default function GoalsManagement() {
     <div className="flex h-screen bg-gray-100">
       <SidebarAdmin />
       <div className="flex-1 flex flex-col overflow-hidden">
-        <Header />
+        <HeaderAdmin />
         <main className="flex-1 overflow-x-hidden overflow-y-auto bg-gray-100 p-6">
           <div className="bg-white shadow-md rounded-lg p-6">
             <div className="flex items-center mb-6">

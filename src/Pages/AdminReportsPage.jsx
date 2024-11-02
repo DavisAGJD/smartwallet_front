@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { obtenerReportes, eliminarReporte } from "../api/reportesApi"; // Asegúrate de tener `eliminarReporte` en `reportesApi`
 import { Input } from "../components/ui/input";
 import ScrollArea from "../components/ui/Componentes/scroll-area";
-import Header from "../components/ui/Componentes/Header";
+import HeaderAdmin from "../components/ui/Componentes/HeaderAdmin";
 import SidebarAdmin from "../components/ui/Componentes/SidebarAdmin";
 import CardReport from "../components/ui/Componentes/CardReport";
 import { Button } from "../components/ui/button";
@@ -91,7 +91,7 @@ export default function AdminReportsPage() {
     <div className="flex h-screen bg-gray-100">
       <SidebarAdmin />
       <main className="flex-1 p-6">
-        <Header />
+        <HeaderAdmin />
 
         <div className="bg-white rounded-lg p-6 shadow-md">
           <div className="flex flex-col space-y-4 mb-4">
