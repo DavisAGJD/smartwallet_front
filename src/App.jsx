@@ -20,6 +20,8 @@ import UserConfigurations from "./Pages/UserConfigurations";
 import ExpenseCategories from "./Pages/ExpenseCategories"; // Nueva importación
 import GoalsManagement from "./Pages/GoalsManagement"; // Nueva importación para la gestión de metas
 import AnalysisPage from "./Pages/AnalysisPage";
+import RemindersPage from "./Pages/RemindersPage";
+import NotificationsPage from "./Pages/NotificationPage";
 
 function App() {
   return (
@@ -47,6 +49,22 @@ function App() {
           element={
             <ProtectedRoute requiredRole="usuario">
               <AnalysisPage />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/reminders"
+          element={
+            <ProtectedRoute requiredRole="usuario">
+              <RemindersPage />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/notifications"
+          element={
+            <ProtectedRoute requiredRole="usuario">
+              <NotificationsPage />
             </ProtectedRoute>
           }
         />

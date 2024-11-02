@@ -5,6 +5,7 @@ import {
   BarChart2,
   CircleDollarSign,
   PieChart,
+  BellPlus,
 } from "lucide-react"; // Asegúrate de importar el icono para Análisis
 import PropTypes from "prop-types";
 import Logo from "../../../assets/Logo.png";
@@ -70,6 +71,7 @@ export default function Sidebar() {
           <MenuItem icon={<GraduationCap size={20} />} label="Educación" to={"/education"} />
           <MenuItem icon={<BarChart2 size={20} />} label="Reportes" to={"/reports"} />
           <MenuItem icon={<PieChart size={20} />} label="Análisis" to={"/analysis"} /> {/* Nuevo elemento para Análisis */}
+          <MenuItem icon={<BellPlus size={20} />} label="Recordatorios" to={"/reminders"} /> {/* Nuevo elemento para Análisis */}
         </ul>
       </nav>
       <div className="p-4 border-t relative">

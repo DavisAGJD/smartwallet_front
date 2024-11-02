@@ -54,7 +54,8 @@ export default function GoalsPage() {
 
   // Función para cargar las metas desde el backend
   const cargarMetas = async () => {
-    if (!usuarioId || !token || !categorias) { // Solo ejecuta si `categorias` está listo
+    if (!usuarioId || !token || !categorias) {
+      // Solo ejecuta si `categorias` está listo
       return;
     }
     try {
@@ -64,11 +65,14 @@ export default function GoalsPage() {
           ...meta,
           monto_objetivo: Number(meta.monto_objetivo),
           monto_actual: Number(meta.monto_actual) || 0,
-          nombre_categoria: categorias[meta.categoria_meta_id] || "Sin categoría", // Asignar nombre de categoría a partir del ID
+          nombre_categoria:
+            categorias[meta.categoria_meta_id] || "Sin categoría", // Asignar nombre de categoría a partir del ID
         }));
         setMetas(metasConvertidas);
       } else {
-        console.warn("No se obtuvieron metas o el formato de respuesta no es correcto");
+        console.warn(
+          "No se obtuvieron metas o el formato de respuesta no es correcto"
+        );
         setMetas([]);
       }
     } catch (error) {
@@ -84,7 +88,8 @@ export default function GoalsPage() {
 
   // useEffect para cargar las metas cuando `categorias` cambia
   useEffect(() => {
-    if (categorias) { // Solo ejecuta cuando `categorias` esté listo
+    if (categorias) {
+      // Solo ejecuta cuando `categorias` esté listo
       cargarMetas();
     }
   }, [categorias, usuarioId, token]);
@@ -130,7 +135,6 @@ export default function GoalsPage() {
           </button>
 
           <div className="flex-1 p-6 overflow-y-auto">
-            <Header />
             <div className="flex-auto mt-3 bg-gray-100 p-6">
               <div className="bg-white p-4 rounded-lg shadow-lg">
                 {/* Renderizamos el componente de lista de metas */}
