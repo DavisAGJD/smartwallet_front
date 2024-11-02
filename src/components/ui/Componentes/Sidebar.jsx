@@ -1,11 +1,11 @@
-// Sidebar.jsx
 import {
   FileText,
   Target,
   GraduationCap,
   BarChart2,
   CircleDollarSign,
-} from "lucide-react";
+  PieChart,
+} from "lucide-react"; // Asegúrate de importar el icono para Análisis
 import PropTypes from "prop-types";
 import Logo from "../../../assets/Logo.png";
 import { Link, useNavigate } from "react-router-dom";
@@ -69,6 +69,7 @@ export default function Sidebar() {
           <MenuItem icon={<Target size={20} />} label="Metas" to={"/goals"} />
           <MenuItem icon={<GraduationCap size={20} />} label="Educación" to={"/education"} />
           <MenuItem icon={<BarChart2 size={20} />} label="Reportes" to={"/reports"} />
+          <MenuItem icon={<PieChart size={20} />} label="Análisis" to={"/analysis"} /> {/* Nuevo elemento para Análisis */}
         </ul>
       </nav>
       <div className="p-4 border-t relative">

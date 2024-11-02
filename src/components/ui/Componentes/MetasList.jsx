@@ -2,8 +2,13 @@ import { useState, useContext } from "react";
 import CardMeta from "./CardMeta";
 import AddAmountModal from "./Modales/AddAmountModal";
 import EditGoalModal from "./Modales/EditGoalModal";
+import CongratulationsModal from "../Componentes/CongratulationsModal";
 import { AuthContext } from "../../../context/AuthContext";
-import { actualizarMontoActual, eliminarMeta, actualizarMeta } from "../../../api/metasApi";
+import {
+  actualizarMontoActual,
+  eliminarMeta,
+  actualizarMeta,
+} from "../../../api/metasApi";
 import PropTypes from "prop-types";
 
 export default function MetasList({ metas, onMetasUpdated }) {
@@ -13,6 +18,7 @@ export default function MetasList({ metas, onMetasUpdated }) {
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
   const [metaToDelete, setMetaToDelete] = useState(null);
+  const [isCongratulationsModalOpen, setIsCongratulationsModalOpen] = useState(false);
 
   // Paginación
   const [currentPage, setCurrentPage] = useState(1);
@@ -32,11 +38,21 @@ export default function MetasList({ metas, onMetasUpdated }) {
   const handleAddAmount = async (montoAdicional) => {
     try {
       if (selectedMeta) {
-        await actualizarMontoActual(selectedMeta.meta_id, montoAdicional, token);
-        onMetasUpdated();
+        const nuevoMontoActual = selectedMeta.monto_actual + montoAdicional;
+
+        if (nuevoMontoActual >= selectedMeta.monto_objetivo) {
+          // Si la meta se completa, mostrar el modal de felicitaciones y eliminar la meta
+          setIsCongratulationsModalOpen(true);
+          await eliminarMeta(selectedMeta.meta_id, token);
+          onMetasUpdated(); // Refrescar la lista de metas después de eliminar
+        } else {
+          // Actualizar solo el monto si no se ha cumplido la meta
+          await actualizarMontoActual(selectedMeta.meta_id, montoAdicional, token);
+          onMetasUpdated();
+        }
       }
     } catch (error) {
-      console.error("Error al actualizar el monto:", error);
+      console.error("Error al actualizar el monto o eliminar la meta:", error);
     } finally {
       setIsAddAmountModalOpen(false);
     }
@@ -89,7 +105,12 @@ export default function MetasList({ metas, onMetasUpdated }) {
         {currentMetas.map((meta) => (
           <CardMeta
             key={meta.meta_id}
-            meta={meta}
+            meta={{
+              ...meta,
+              monto_objetivo: meta.monto_objetivo.toLocaleString("en-IN"),
+              monto_actual: meta.monto_actual.toLocaleString("en-IN"),
+              nombre_categoria: meta.nombre_categoria, // Asegúrate de que este campo esté presente
+            }}
             onAddAmount={handleAddAmountClick}
             onEdit={handleEditMetaClick}
             onDelete={handleDeleteMetaClick}
@@ -99,17 +120,20 @@ export default function MetasList({ metas, onMetasUpdated }) {
 
       {/* Paginación */}
       <div className="flex justify-center mt-4">
-        {Array.from({ length: Math.ceil(metas.length / itemsPerPage) }, (_, i) => (
-          <button
-            key={i}
-            onClick={() => paginate(i + 1)}
-            className={`px-3 py-1 mx-1 rounded-md ${
-              currentPage === i + 1 ? "bg-blue-500 text-white" : "bg-gray-200"
-            }`}
-          >
-            {i + 1}
-          </button>
-        ))}
+        {Array.from(
+          { length: Math.ceil(metas.length / itemsPerPage) },
+          (_, i) => (
+            <button
+              key={i}
+              onClick={() => paginate(i + 1)}
+              className={`px-3 py-1 mx-1 rounded-md ${
+                currentPage === i + 1 ? "bg-blue-500 text-white" : "bg-gray-200"
+              }`}
+            >
+              {i + 1}
+            </button>
+          )
+        )}
       </div>
 
       {/* Modal para añadir monto */}
@@ -137,7 +161,9 @@ export default function MetasList({ metas, onMetasUpdated }) {
         <div className="fixed inset-0 flex items-center justify-center bg-gray-800 bg-opacity-50">
           <div className="bg-white rounded-lg shadow-lg w-80 p-6">
             <h2 className="text-lg font-semibold mb-4">¿Estás seguro?</h2>
-            <p className="text-sm mb-4">¿Deseas eliminar esta meta? Esta acción no se puede deshacer.</p>
+            <p className="text-sm mb-4">
+              ¿Deseas eliminar esta meta? Esta acción no se puede deshacer.
+            </p>
             <div className="flex justify-end space-x-2">
               <button
                 onClick={() => setIsDeleteModalOpen(false)}
@@ -155,6 +181,15 @@ export default function MetasList({ metas, onMetasUpdated }) {
           </div>
         </div>
       )}
+
+      {/* Modal de felicitaciones */}
+      {isCongratulationsModalOpen && (
+        <CongratulationsModal
+          isOpen={isCongratulationsModalOpen}
+          onClose={() => setIsCongratulationsModalOpen(false)}
+          meta={selectedMeta}
+        />
+      )}
     </div>
   );
 }
@@ -167,6 +202,8 @@ MetasList.propTypes = {
       descripcion: PropTypes.string,
       fecha_limite: PropTypes.string.isRequired,
       monto_actual: PropTypes.number,
+      monto_objetivo: PropTypes.number.isRequired,
+      nombre_categoria: PropTypes.string.isRequired, // Incluye nombre de la categoría en las propTypes
     })
   ).isRequired,
   onMetasUpdated: PropTypes.func.isRequired,

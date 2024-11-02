@@ -14,7 +14,8 @@ export default function Login() {
     e.preventDefault();
     const data = await loginUsuario(email, password_usuario);
 
-    if (data.token && data.rol) { // Verifica que el token y el rol están presentes
+    if (data.token && data.rol) {
+      // Verifica que el token y el rol están presentes
       login(data.token, data.rol); // Guarda el token y el rol en el contexto
 
       if (data.rol === "admin") {
@@ -77,7 +78,11 @@ export default function Login() {
             transition={{ delay: 0.3 }}
           >
             <div className="flex justify-between font-bold">
-              <img src="src/assets/Logo.png" alt="Logo" className="h-10 mb-4 " />
+              <img
+                src="src/assets/Logo.png"
+                alt="Logo"
+                className="h-10 mb-4 "
+              />
               <h1 className="text-2xl font-bold text-gray-800">
                 Iniciar sesión
               </h1>
@@ -157,24 +162,6 @@ export default function Login() {
               </button>
             </motion.div>
           </form>
-
-          {/* Updated Google Login Button */}
-          <motion.div
-            className="mt-4 w-full"
-            variants={fadeIn}
-            initial="hidden"
-            animate="visible"
-            transition={{ delay: 0.7 }}
-          >
-            <button className="w-full flex items-center justify-center py-2 px-4 border border-green-500 rounded-md shadow-sm text-sm font-medium text-green-500 bg-white hover:bg-green-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500">
-              <img
-                src="https://www.svgrepo.com/show/2778/google.svg"
-                alt="Logo de Google"
-                className="mr-2 h-5 w-5"
-              />
-              Iniciar sesión con Google
-            </button>
-          </motion.div>
 
           <motion.div
             className="mt-6 text-center text-sm text-gray-600"

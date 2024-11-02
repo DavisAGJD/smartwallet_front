@@ -19,6 +19,7 @@ import EducationAdminPage from "./Pages/EducationAdminPage";
 import UserConfigurations from "./Pages/UserConfigurations";
 import ExpenseCategories from "./Pages/ExpenseCategories"; // Nueva importación
 import GoalsManagement from "./Pages/GoalsManagement"; // Nueva importación para la gestión de metas
+import AnalysisPage from "./Pages/AnalysisPage";
 
 function App() {
   return (
@@ -31,17 +32,6 @@ function App() {
         <Route path="/how-it-works" element={<HowItWorks />} />
         <Route path="/prices" element={<PricingTier />} />
         <Route path="/about-us" element={<AboutSection />} />
-        {/* Ruta para la gestión de categorías de gastos */}
-        <Route
-          path="/expense-categories" // Ruta para la gestión de categorías
-          element={<ExpenseCategories />}
-        />
-
-        {/* Ruta para la gestión de metas */}
-        <Route
-          path="/goals-management" // Nueva ruta para la gestión de metas
-          element={<GoalsManagement />}
-        />
 
         {/* Rutas protegidas para usuarios regulares */}
         <Route
@@ -53,9 +43,14 @@ function App() {
           }
         />
         <Route
-          path="/expenses"
-          element={<ExpensesPage />}
+          path="/analysis"
+          element={
+            <ProtectedRoute requiredRole="usuario">
+              <AnalysisPage />
+            </ProtectedRoute>
+          }
         />
+        <Route path="/expenses" element={<ExpensesPage />} />
         <Route
           path="/reports"
           element={
@@ -112,6 +107,25 @@ function App() {
           element={
             <ProtectedRoute requiredRole="admin">
               <EducationAdminPage />
+            </ProtectedRoute>
+          }
+        />
+        {/* Ruta para la gestión de categorías de gastos */}
+        <Route
+          path="/expense-categories" // Ruta para la gestión de categorías
+          element={
+            <ProtectedRoute requiredRole="admin">
+              <ExpenseCategories />
+            </ProtectedRoute>
+          }
+        />
+
+        {/* Ruta para la gestión de metas */}
+        <Route
+          path="/goals-management" // Nueva ruta para la gestión de metas
+          element={
+            <ProtectedRoute requiredRole="admin">
+              <GoalsManagement />
             </ProtectedRoute>
           }
         />

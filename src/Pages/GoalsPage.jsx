@@ -5,11 +5,13 @@ import { Plus } from "lucide-react";
 import AddGoalModal from "../components/ui/Componentes/Modales/AddGoalModal";
 import MetasList from "../components/ui/Componentes/MetasList";
 import { obtenerMetasPorUsuario, eliminarMeta } from "../api/metasApi";
+import { obtenerCategoriasMeta } from "../api/categoriasApi"; // Importar la API de categorías
 import { AuthContext } from "../context/AuthContext";
 
 export default function GoalsPage() {
   const [isAddGoalModalOpen, setIsAddGoalModalOpen] = useState(false);
   const [metas, setMetas] = useState([]); // Estado para almacenar metas
+  const [categorias, setCategorias] = useState(null); // Estado para almacenar categorías (inicialmente `null`)
   const { token } = useContext(AuthContext);
 
   // Función para decodificar el token y obtener el usuarioId
@@ -36,38 +38,56 @@ export default function GoalsPage() {
     cargarMetas();
   };
 
+  // Función para cargar las categorías desde el backend
+  const cargarCategorias = async () => {
+    try {
+      const categoriasData = await obtenerCategoriasMeta();
+      const categoriasMap = categoriasData.reduce((acc, categoria) => {
+        acc[categoria.categoria_meta_id] = categoria.nombre_categoria;
+        return acc;
+      }, {});
+      setCategorias(categoriasMap); // Actualiza `categorias` solo cuando esté completamente cargado
+    } catch (error) {
+      console.error("Error al cargar las categorías:", error);
+    }
+  };
+
   // Función para cargar las metas desde el backend
   const cargarMetas = async () => {
-    if (!usuarioId || !token) {
-      console.warn("Token o usuarioId no disponible");
+    if (!usuarioId || !token || !categorias) { // Solo ejecuta si `categorias` está listo
       return;
     }
     try {
       const metasUsuario = await obtenerMetasPorUsuario(usuarioId, token);
       if (metasUsuario && Array.isArray(metasUsuario)) {
-        // Convertimos `monto_actual` a número para cada meta
         const metasConvertidas = metasUsuario.map((meta) => ({
           ...meta,
           monto_objetivo: Number(meta.monto_objetivo),
-          monto_actual: Number(meta.monto_actual) || 0, // Convertir a número, o 0 si es null/undefined
+          monto_actual: Number(meta.monto_actual) || 0,
+          nombre_categoria: categorias[meta.categoria_meta_id] || "Sin categoría", // Asignar nombre de categoría a partir del ID
         }));
         setMetas(metasConvertidas);
       } else {
-        console.warn(
-          "No se obtuvieron metas o el formato de respuesta no es correcto"
-        );
-        setMetas([]); // Establece el estado en un array vacío si la respuesta es `null`
+        console.warn("No se obtuvieron metas o el formato de respuesta no es correcto");
+        setMetas([]);
       }
     } catch (error) {
       console.error("Error al cargar las metas:", error);
-      setMetas([]); // En caso de error, asegúrate de que `metas` esté definido como un array vacío
+      setMetas([]);
     }
   };
 
-  // useEffect para cargar las metas al montar el componente
+  // useEffect para cargar las categorías una sola vez al inicio
   useEffect(() => {
-    cargarMetas();
-  }, [usuarioId, token]);
+    cargarCategorias();
+  }, []);
+
+  // useEffect para cargar las metas cuando `categorias` cambia
+  useEffect(() => {
+    if (categorias) { // Solo ejecuta cuando `categorias` esté listo
+      cargarMetas();
+    }
+  }, [categorias, usuarioId, token]);
 
   // Función para manejar la eliminación de una meta
   const handleDeleteMeta = async (idMeta) => {

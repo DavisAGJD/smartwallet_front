@@ -30,14 +30,15 @@ export default function GastosList({ refreshExpenses }) {
   const cargarGastos = async () => {
     try {
       const gastosUsuario = await obtenerGastosPorUsuario(usuarioId, token);
-      const sortedGastos = gastosUsuario.sort(
-        (a, b) => new Date(b.fecha) - new Date(a.fecha) // Ordenar por fecha (más reciente primero)
-      );
+      const sortedGastos = gastosUsuario
+        .map(gasto => ({ ...gasto, monto: parseFloat(gasto.monto) })) // Convertir `monto` a número
+        .sort((a, b) => new Date(b.fecha) - new Date(a.fecha)); // Ordenar por fecha (más reciente primero)
       setGastos(sortedGastos);
     } catch (error) {
       console.error("Error al cargar los gastos:", error);
     }
   };
+  
 
   useEffect(() => {
     if (usuarioId) cargarGastos();
@@ -75,7 +76,7 @@ export default function GastosList({ refreshExpenses }) {
   return (
     <div className="bg-white rounded-lg shadow-md p-6 max-w-3xl mx-auto">
       <h2 className="text-lg font-semibold">Últimos gastos registrados</h2>
-      <p className="text-sm text-gray-500 mb-4">Revisa tus gastos</p>
+      <p className="text-sm text-gray-500 mb-3">Revisa tus gastos</p>
 
       <div className="overflow-x-auto border rounded-lg">
         <table className="min-w-full bg-white">
@@ -116,7 +117,7 @@ export default function GastosList({ refreshExpenses }) {
                     gasto.monto < 0 ? "text-red-500" : "text-red-500"
                   }`}
                 >
-                  {gasto.monto < 0 ? `-${gasto.monto}` : `-${gasto.monto}`}
+                  {gasto.monto < 0 ? `-$${gasto.monto}` : `-$${gasto.monto}`}
                 </td>
                 <td className="px-4 py-2 text-right flex space-x-2">
                   <button onClick={() => handleEditClick(gasto)}>
