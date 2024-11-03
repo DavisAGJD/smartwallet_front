@@ -6,7 +6,6 @@ import { fetchArticles } from "../services/newsAPI"; // Importa el nuevo compone
 import { useEffect, useState } from "react";
 
 export default function EducationPage() {
-
   const [articles, setArticles] = useState([]);
   const [loading, setLoading] = useState(true);
 
@@ -24,18 +23,14 @@ export default function EducationPage() {
     getArticles();
   }, []);
 
-
   return (
     <div className="flex h-screen bg-gray-100">
-
       <Sidebar />
       <main className="flex-1 p-6">
         <Header />
         <div className="mb-6">
           <h1 className="text-2xl font-bold text-green-700">Educación</h1>
-          <div className="mt-2">
-
-          </div>
+          <div className="mt-2"></div>
         </div>
 
         <ScrollArea className="h-[calc(100vh-120px)]">
@@ -47,12 +42,13 @@ export default function EducationPage() {
                 <CardEducation
                   key={index}
                   title={article.title}
-                  description={article.description || "Descripción no disponible"}
-                  image={article.urlToImage}
-                  timeAgo={article.publishedAt}
+                  description={
+                    article.description || "Descripción no disponible"
+                  }
+                  image={article.image || "url_imagen_placeholder.jpg"} // Asegúrate de que exista un campo `image`
+                  timeAgo={article.pubDate} // Asegúrate de que el campo `pubDate` sea usado para la fecha de publicación
                   author={article.author || "Desconocido"}
-                  likes={0}
-                  url={article.url} // Pasa la URL de la noticia
+                  url={article.link} // Cambia esto al campo adecuado si la URL se llama `link`
                 />
               ))
             )}

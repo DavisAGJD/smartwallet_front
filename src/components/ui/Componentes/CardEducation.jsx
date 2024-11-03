@@ -42,12 +42,12 @@ export default function CardEducation({
   );
 }
 
-<CardEducation
-  key={index}
-  title={article.title}
-  description={article.description || "Descripción no disponible"}
-  image={article.image || "url_imagen_placeholder.jpg"} // Asegúrate de que exista un campo `image`
-  timeAgo={article.pubDate} // Asegúrate de que el campo `pubDate` sea usado para la fecha de publicación
-  author={article.author || "Desconocido"}
-  url={article.link} // Cambia esto al campo adecuado si la URL se llama `link`
-/>
+CardEducation.propTypes = {
+  title: PropTypes.string.isRequired,
+  description: PropTypes.string,
+  image: PropTypes.string.isRequired,
+  timeAgo: PropTypes.string.isRequired,
+  author: PropTypes.string,
+  likes: PropTypes.number,
+  url: PropTypes.string.isRequired, // Se requiere la URL de la noticia
+};
