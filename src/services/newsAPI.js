@@ -1,32 +1,11 @@
-const API_KEY = "e28870dadfa34f548a3a8298eb6675c1"; // Tu clave API
-const BASE_URL = `https://newsapi.org/v2/everything`;
-
-/**
- * Función para obtener artículos de noticias basados en una palabra clave.
- * @param {string} keyword - La palabra clave para buscar.
- * @returns {Promise<Array>} - Retorna un array de artículos.
- */
 export async function fetchArticles(keyword = "finance") {
   try {
-    const response = await fetch(
-      `${BASE_URL}?q=${keyword}&language=es&sortBy=publishedAt&apiKey=${API_KEY}`,
-      {
-        method: "GET",
-        headers: {
-          "Accept": "application/json",
-          "Content-Type": "application/json",
-          "Upgrade-Insecure-Requests": "1" // Añade el encabezado aquí
-        }
-      }
-    );
-    
-    if (!response.ok) {
-      throw new Error("Error fetching articles");
-    }
-    
+    const response = await fetch(`${import.meta.env.VITE_API_URL}/articles?keyword=${keyword}`);
+    if (!response.ok) throw new Error("Error fetching articles");
+
     const data = await response.json();
-    console.log("Datos de la API:", data.articles); // Para inspeccionar la estructura de los datos
-    return data.articles;
+    console.log("Datos de la API:", data); // Para inspeccionar los datos
+    return data;
   } catch (error) {
     console.error("Error en la solicitud de la API:", error);
     return [];
