@@ -1,6 +1,6 @@
 export async function fetchArticles(keyword = "finance") {
   try {
-    const response = await fetch(`${import.meta.env.VITE_API_URL}/api/articles?keyword=${keyword}`);
+    const response = await fetch(`${import.meta.env.VITE_API_URL}/articles?keyword=${keyword}`);
     if (!response.ok) throw new Error("Error fetching articles");
 
     const data = await response.json();
