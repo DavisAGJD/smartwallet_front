@@ -9,11 +9,21 @@ const BASE_URL = `https://newsapi.org/v2/everything`;
 export async function fetchArticles(keyword = "finance") {
   try {
     const response = await fetch(
-      `${BASE_URL}?q=${keyword}&language=es&sortBy=publishedAt&apiKey=${API_KEY}`
+      `${BASE_URL}?q=${keyword}&language=es&sortBy=publishedAt&apiKey=${API_KEY}`,
+      {
+        method: "GET",
+        headers: {
+          "Accept": "application/json",
+          "Content-Type": "application/json",
+          "Upgrade-Insecure-Requests": "1" // Añade el encabezado aquí
+        }
+      }
     );
+    
     if (!response.ok) {
       throw new Error("Error fetching articles");
     }
+    
     const data = await response.json();
     console.log("Datos de la API:", data.articles); // Para inspeccionar la estructura de los datos
     return data.articles;
