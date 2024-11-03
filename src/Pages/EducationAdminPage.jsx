@@ -1,5 +1,4 @@
 import { useEffect, useState } from "react";
-import { Button } from "../components/ui/button";
 import ScrollArea from "../components/ui/Componentes/scroll-area";
 import HeaderAdmin from "../components/ui/Componentes/HeaderAdmin";
 import SidebarAdmin from "../components/ui/Componentes/SidebarAdmin";
@@ -24,21 +23,17 @@ export default function EducationAdminPage() {
     getArticles();
   }, []);
 
-
   return (
-    <div className="flex h-screen bg-gray-100">
-      <SidebarAdmin />
-      <main className="flex-1 p-6">
+    <div className="flex h-screen overflow-hidden bg-gray-100">
+      <SidebarAdmin className="h-full" />
+      <main className="flex-1 flex flex-col h-full overflow-hidden p-6">
         <HeaderAdmin />
         <div className="mb-6">
           <h1 className="text-2xl font-bold text-green-700">Educación</h1>
-          <div className="mt-2">
-
-          </div>
         </div>
 
-        <ScrollArea className="h-[calc(100vh-120px)]">
-          <div className="space-y-6">
+        <div className="flex-1 overflow-y-auto">
+          <ScrollArea className="space-y-6">
             {loading ? (
               <p className="text-center text-gray-600">Cargando noticias...</p>
             ) : (
@@ -47,16 +42,15 @@ export default function EducationAdminPage() {
                   key={index}
                   title={article.title}
                   description={article.description || "Descripción no disponible"}
-                  image={article.urlToImage}
-                  timeAgo={article.publishedAt}
-                  author={article.author || "Desconocido"}
-                  likes={0}
-                  url={article.url} // Pasa la URL de la noticia
+                  image={article.image_url || "url_placeholder.png"} // Imagen de reserva si no está disponible
+                  timeAgo={article.pubDate}
+                  author={article.creator ? article.creator[0] : "Desconocido"}
+                  url={article.link}
                 />
               ))
             )}
-          </div>
-        </ScrollArea>
+          </ScrollArea>
+        </div>
       </main>
     </div>
   );
