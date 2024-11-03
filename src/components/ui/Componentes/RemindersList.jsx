@@ -29,7 +29,19 @@ export default function RemindersList({ refreshReminders }) {
   const cargarRecordatorios = async () => {
     try {
       const recordatoriosUsuario = await obtenerRecordatoriosPorUsuario(usuarioId, token);
-      setRecordatorios(recordatoriosUsuario);
+      const hoy = new Date();
+
+      // Filtrar los recordatorios que ya han pasado su fecha y eliminarlos
+      const recordatoriosVigentes = recordatoriosUsuario.filter((recordatorio) => {
+        const fechaRecordatorio = new Date(recordatorio.fecha_recordatorio);
+        if (fechaRecordatorio < hoy) {
+          eliminarRecordatorio(recordatorio.recordatorio_id, token);
+          return false; // No incluir los recordatorios expirados
+        }
+        return true; // Incluir solo los recordatorios vigentes
+      });
+
+      setRecordatorios(recordatoriosVigentes);
     } catch (error) {
       console.error("Error al cargar los recordatorios:", error);
     }

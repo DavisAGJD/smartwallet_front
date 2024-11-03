@@ -35,6 +35,9 @@ export default function AddReminderModal({ isOpen, onClose, onReminderAdded }) {
     }
   };
 
+  // Obtener la fecha actual en formato adecuado para el atributo "min"
+  const today = new Date().toISOString().split("T")[0];
+
   if (!isOpen) return null;
 
   return (
@@ -61,6 +64,7 @@ export default function AddReminderModal({ isOpen, onClose, onReminderAdded }) {
               value={fechaRecordatorio}
               onChange={(e) => setFechaRecordatorio(e.target.value)}
               required
+              min={today} // Configura la fecha mínima en la fecha actual
               className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-1 focus:ring-green-500"
             />
           </div>
