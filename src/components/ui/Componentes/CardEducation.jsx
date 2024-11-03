@@ -11,12 +11,12 @@ export default function CardEducation({
   return (
     <div className="w-full bg-white rounded-lg shadow-md overflow-hidden">
       {/* Imagen */}
-      <div className="h-48 w-full bg-gray-200">
+      <div className="h-64 w-full bg-gray-200">
         <img src={image} alt={title} className="w-full h-full object-cover" />
       </div>
 
       {/* Contenido */}
-      <div className="p-4 flex flex-col justify-between h-48">
+      <div className="p-4 flex flex-col justify-between space-y-2">
         <h3 className="text-lg font-semibold text-gray-800 mb-2 line-clamp-2">
           {title}
         </h3>
@@ -33,7 +33,7 @@ export default function CardEducation({
         </div>
 
         {/* Footer de ver más */}
-        <div className="flex justify-between items-center pt-4 border-t">
+        <div className="flex justify-end items-center pt-4 border-t">
           <a
             href={url}
             target="_blank"
