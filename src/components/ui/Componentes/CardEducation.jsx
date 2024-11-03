@@ -22,11 +22,11 @@ export default function CardEducation({
 
         {/* Detalles del artículo */}
         <div className="flex justify-between items-center text-sm text-gray-500 mb-4">
-          <span>{new Date(timeAgo).toLocaleDateString()}</span>
-          <span>Por {author}</span>
+          <span>{timeAgo ? new Date(timeAgo).toLocaleDateString() : "Fecha no disponible"}</span>
+          <span>Por {author || "Desconocido"}</span>
         </div>
 
-        {/* Footer de ver mas */}
+        {/* Footer de ver más */}
         <div className="flex justify-between items-center pt-4 border-t">
           <a
             href={url}

@@ -45,10 +45,10 @@ export default function EducationPage() {
                   description={
                     article.description || "Descripción no disponible"
                   }
-                  image={article.image || "url_imagen_placeholder.jpg"} // Asegúrate de que exista un campo `image`
-                  timeAgo={article.pubDate} // Asegúrate de que el campo `pubDate` sea usado para la fecha de publicación
-                  author={article.author || "Desconocido"}
-                  url={article.link} // Cambia esto al campo adecuado si la URL se llama `link`
+                  image={article.image_url || "url_placeholder.png"} // Imagen de reserva si no está disponible
+                  timeAgo={article.pubDate}
+                  author={article.creator ? article.creator[0] : "Desconocido"}
+                  url={article.link}
                 />
               ))
             )}
