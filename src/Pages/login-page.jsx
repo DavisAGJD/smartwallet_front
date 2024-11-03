@@ -3,6 +3,7 @@ import { AuthContext } from "../context/AuthContext";
 import { loginUsuario } from "../api/usuariosApi";
 import { motion } from "framer-motion";
 import { Link, useNavigate } from "react-router-dom";
+import Logo from "../assets/Logo.png";
 
 export default function Login() {
   const { login } = useContext(AuthContext);
@@ -78,11 +79,7 @@ export default function Login() {
             transition={{ delay: 0.3 }}
           >
             <div className="flex justify-between font-bold">
-              <img
-                src="src/assets/Logo.png"
-                alt="Logo"
-                className="h-10 mb-4 "
-              />
+              <img src={Logo} alt="Logo" className="h-10 mb-4 " />
               <h1 className="text-2xl font-bold text-gray-800">
                 Iniciar sesión
               </h1>
@@ -176,17 +173,6 @@ export default function Login() {
               className="font-medium text-green-600 hover:underline"
             >
               Registrarse
-            </a>
-          </motion.div>
-          <motion.div
-            className="mt-4 text-center"
-            variants={fadeIn}
-            initial="hidden"
-            animate="visible"
-            transition={{ delay: 0.9 }}
-          >
-            <a href="#" className="text-sm text-green-600 hover:underline">
-              ¿Olvidaste tu contraseña?
             </a>
           </motion.div>
         </motion.div>
