@@ -54,14 +54,12 @@ export default function AdminOverviewPage() {
           <AdminCard
             title="Usuarios Registrados"
             value={usuariosRegistrados ?? "N/A"}
-            percentage={8.25}
             color="bg-blue-100"
             loading={loading}
           />
           <AdminCard
             title="Usuarios Registrados este Mes"
             value={usuariosRegistradosMes ?? "N/A"}
-            percentage={15.03}
             color="bg-purple-100"
             loading={loading}
           />
