@@ -37,13 +37,20 @@ export default function AddExpenseModal({ isOpen, onClose, onExpenseAdded }) {
     const usuario_id = parseJwt(token).id;
 
     try {
-      await agregarGasto(token, {
+      const response = await agregarGasto(token, {
         usuario_id,
         monto,
         categoria_gasto_id: selectedCategory.value,
         descripcion,
       });
-      onExpenseAdded();
+
+      // Suponiendo que el backend te devuelve los puntos obtenidos
+      const puntosObtenidos = response.puntos || 0;
+
+      // Llamamos a onExpenseAdded con los puntos obtenidos
+      onExpenseAdded(puntosObtenidos);
+
+      // Cerrar el modal de agregar gasto
       onClose();
     } catch (error) {
       console.error("Error al agregar gasto:", error);
@@ -69,7 +76,9 @@ export default function AddExpenseModal({ isOpen, onClose, onExpenseAdded }) {
         <form onSubmit={handleAddExpense}>
           {/* Monto */}
           <div className="mb-4">
-            <label className="block text-sm font-medium text-gray-700">Monto</label>
+            <label className="block text-sm font-medium text-gray-700">
+              Monto
+            </label>
             <input
               type="number"
               value={monto}
@@ -78,17 +87,20 @@ export default function AddExpenseModal({ isOpen, onClose, onExpenseAdded }) {
               className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-1 focus:ring-green-500"
             />
           </div>
-          
+
           {/* Categoría */}
           <div className="mb-4">
-            <label className="block text-sm font-medium text-gray-700">Categoría</label>
+            <label className="block text-sm font-medium text-gray-700">
+              Categoría
+            </label>
             <Select
               options={categories}
               value={selectedCategory}
               onChange={setSelectedCategory}
               formatOptionLabel={({ label, icon }) => (
                 <div className="flex items-center">
-                  <span className="mr-2">{icon}</span> {/* Icono de categoría */}
+                  <span className="mr-2">{icon}</span>{" "}
+                  {/* Icono de categoría */}
                   {label}
                 </div>
               )}
@@ -99,7 +111,9 @@ export default function AddExpenseModal({ isOpen, onClose, onExpenseAdded }) {
 
           {/* Descripción */}
           <div className="mb-4">
-            <label className="block text-sm font-medium text-gray-700">Descripción</label>
+            <label className="block text-sm font-medium text-gray-700">
+              Descripción
+            </label>
             <textarea
               value={descripcion}
               onChange={(e) => setDescripcion(e.target.value)}

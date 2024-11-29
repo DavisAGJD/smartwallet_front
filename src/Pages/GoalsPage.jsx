@@ -7,11 +7,14 @@ import MetasList from "../components/ui/Componentes/MetasList";
 import { obtenerMetasPorUsuario, eliminarMeta } from "../api/metasApi";
 import { obtenerCategoriasMeta } from "../api/categoriasApi"; // Importar la API de categorías
 import { AuthContext } from "../context/AuthContext";
+import SuccessModal from "../components/ui/Componentes/Modales/SuccessModal"; // Importar el modal de éxito
 
 export default function GoalsPage() {
   const [isAddGoalModalOpen, setIsAddGoalModalOpen] = useState(false);
   const [metas, setMetas] = useState([]); // Estado para almacenar metas
   const [categorias, setCategorias] = useState(null); // Estado para almacenar categorías (inicialmente `null`)
+  const [isSuccessModalOpen, setIsSuccessModalOpen] = useState(false); // Estado para controlar el modal de éxito
+  const [points, setPoints] = useState(0); // Estado para almacenar los puntos obtenidos (inicializado en 0)
   const { token } = useContext(AuthContext);
 
   // Función para decodificar el token y obtener el usuarioId
@@ -33,8 +36,10 @@ export default function GoalsPage() {
   };
 
   // Función para cerrar el modal y refrescar las metas cuando se agrega una nueva
-  const handleGoalAdded = () => {
+  const handleGoalAdded = (newPoints) => {
     setIsAddGoalModalOpen(false);
+    setPoints(newPoints || 0); // Si no se pasa un valor para `newPoints`, se asigna 0
+    setIsSuccessModalOpen(true); // Mostrar el modal de éxito
     cargarMetas();
   };
 
@@ -104,16 +109,6 @@ export default function GoalsPage() {
     }
   };
 
-  // Función para manejar la edición de una meta
-  const handleEditMeta = (meta) => {
-    console.log("Editar meta:", meta);
-  };
-
-  // Función para manejar la adición de monto a una meta
-  const handleAddAmount = (idMeta) => {
-    console.log("Añadir monto a la meta:", idMeta);
-  };
-
   return (
     <div className="flex h-screen bg-gray-100">
       <div className="w-64 bg-[#F5F5F5] shadow-lg">
@@ -141,8 +136,6 @@ export default function GoalsPage() {
                 <MetasList
                   metas={metas}
                   onMetasUpdated={cargarMetas}
-                  onAddAmount={handleAddAmount}
-                  onEdit={handleEditMeta}
                   onDelete={handleDeleteMeta}
                 />
               </div>
@@ -156,8 +149,16 @@ export default function GoalsPage() {
           isOpen={isAddGoalModalOpen}
           onClose={() => setIsAddGoalModalOpen(false)}
           onGoalAdded={handleGoalAdded}
+          setPoints={setPoints} // Pasamos la función `setPoints`
         />
       )}
+
+      {/* Mostrar el modal de éxito cuando se añaden los puntos */}
+      <SuccessModal
+        isOpen={isSuccessModalOpen}
+        points={points || 0} // Aseguramos que `points` nunca sea undefined
+        onClose={() => setIsSuccessModalOpen(false)}
+      />
     </div>
   );
 }

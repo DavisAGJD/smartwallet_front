@@ -17,7 +17,10 @@ export default function Login() {
 
     if (data.token && data.rol) {
       // Verifica que el token y el rol están presentes
-      login(data.token, data.rol); // Guarda el token y el rol en el contexto
+      login(data.token, data.rol, data.racha); // Guarda el token, rol y la racha en el contexto
+
+      // Guardamos la racha en localStorage para poder acceder a ella más tarde
+      localStorage.setItem("racha", data.racha);
 
       if (data.rol === "admin") {
         navigate("/admin-overview"); // Redirige a la página de administración
@@ -89,7 +92,6 @@ export default function Login() {
             </div>
           </motion.div>
 
-          {/* Centered SMARTWALLET Text with Animation */}
           <motion.div
             className="absolute bottom-8 text-center text-3xl text-gray-300 font-bold opacity-20 select-none"
             variants={fadeIn}

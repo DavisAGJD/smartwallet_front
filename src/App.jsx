@@ -25,6 +25,7 @@ import NotificationsPage from "./Pages/NotificationPage";
 import { NotificationProvider } from "./context/NotificationProvider";
 import GlobalNotification from "./components/ui/Componentes/GlobalNotification";
 import { AuthProvider } from "./context/AuthContext";
+import RewardsPage from "./Pages/RewardsPage";
 
 function App() {
   return (
@@ -135,6 +136,17 @@ function App() {
                 <GlobalNotification />
                 <ProtectedRoute requiredRole="usuario">
                   <UserConfigurations />
+                </ProtectedRoute>
+              </NotificationProvider>
+            }
+          />
+          <Route
+            path="/rewards"
+            element={
+              <NotificationProvider>
+                <GlobalNotification />
+                <ProtectedRoute requiredRole="usuario">
+                  <RewardsPage />
                 </ProtectedRoute>
               </NotificationProvider>
             }

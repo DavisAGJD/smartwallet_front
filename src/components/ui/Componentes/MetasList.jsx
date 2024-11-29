@@ -1,24 +1,29 @@
 import { useState, useContext } from "react";
 import CardMeta from "./CardMeta";
-import AddAmountModal from "./Modales/AddAmountModal";
-import EditGoalModal from "./Modales/EditGoalModal";
+import AddAmountModal from "../Componentes/Modales/AddAmountModal";
+import EditGoalModal from "../Componentes/Modales/EditGoalModal";
 import CongratulationsModal from "../Componentes/CongratulationsModal";
+import SuccessModal from "../Componentes/Modales/SuccessModal"; // Importar el SuccessModal
 import { AuthContext } from "../../../context/AuthContext";
 import {
   actualizarMontoActual,
   eliminarMeta,
   actualizarMeta,
+  cumplimientoMeta,
 } from "../../../api/metasApi";
 import PropTypes from "prop-types";
 
 export default function MetasList({ metas, onMetasUpdated }) {
-  const { token } = useContext(AuthContext);
+  const { token, usuarioId } = useContext(AuthContext); // Extraer token y usuarioId desde el contexto
   const [selectedMeta, setSelectedMeta] = useState(null);
   const [isAddAmountModalOpen, setIsAddAmountModalOpen] = useState(false);
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
   const [metaToDelete, setMetaToDelete] = useState(null);
-  const [isCongratulationsModalOpen, setIsCongratulationsModalOpen] = useState(false);
+  const [isCongratulationsModalOpen, setIsCongratulationsModalOpen] =
+    useState(false);
+  const [isSuccessModalOpen, setIsSuccessModalOpen] = useState(false); // Estado para SuccessModal
+  const [points, setPoints] = useState(0); // Guardar los puntos ganados
 
   // Paginación
   const [currentPage, setCurrentPage] = useState(1);
@@ -43,18 +48,46 @@ export default function MetasList({ metas, onMetasUpdated }) {
         if (nuevoMontoActual >= selectedMeta.monto_objetivo) {
           // Si la meta se completa, mostrar el modal de felicitaciones y eliminar la meta
           setIsCongratulationsModalOpen(true);
-          await eliminarMeta(selectedMeta.meta_id, token);
-          onMetasUpdated(); // Refrescar la lista de metas después de eliminar
+
+          // Llamar al backend para eliminar la meta y ganar puntos
+          const response = await cumplimientoMeta(
+            selectedMeta.meta_id,
+            token,
+            usuarioId
+          );
+
+          // Verificar si la respuesta tiene puntos
+          if (response && response.puntos) {
+            const puntosGanados = response.puntos; // Obtener los puntos ganados
+            setPoints(puntosGanados); // Guardar los puntos en el estado
+
+            // Después de un pequeño retraso, mostrar el modal de éxito
+            setTimeout(() => {
+              setIsCongratulationsModalOpen(false); // Cerrar el modal de Congratulations
+              setIsSuccessModalOpen(true); // Abrir el SuccessModal
+            }, 2000); // 2 segundos de retraso para cambiar de modales
+
+            // Refrescar la lista de metas después de eliminar
+            onMetasUpdated();
+          } else {
+            console.error(
+              "No se encontraron puntos en la respuesta del backend."
+            );
+          }
         } else {
-          // Actualizar solo el monto si no se ha cumplido la meta
-          await actualizarMontoActual(selectedMeta.meta_id, montoAdicional, token);
+          // Si la meta no se cumple, solo actualizar el monto actual
+          await actualizarMontoActual(
+            selectedMeta.meta_id,
+            montoAdicional,
+            token
+          );
           onMetasUpdated();
         }
       }
     } catch (error) {
       console.error("Error al actualizar el monto o eliminar la meta:", error);
     } finally {
-      setIsAddAmountModalOpen(false);
+      setIsAddAmountModalOpen(false); // Cerrar el modal de añadir monto
     }
   };
 
@@ -188,6 +221,15 @@ export default function MetasList({ metas, onMetasUpdated }) {
           isOpen={isCongratulationsModalOpen}
           onClose={() => setIsCongratulationsModalOpen(false)}
           meta={selectedMeta}
+        />
+      )}
+
+      {/* Modal de éxito con los puntos */}
+      {isSuccessModalOpen && points > 0 && (
+        <SuccessModal
+          isOpen={isSuccessModalOpen}
+          onClose={() => setIsSuccessModalOpen(false)}
+          points={points}
         />
       )}
     </div>

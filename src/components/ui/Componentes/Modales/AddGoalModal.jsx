@@ -6,7 +6,12 @@ import { getIconForCategory } from "../../../../utils/iconsUtils"; // Función p
 import Select from "react-select";
 import PropTypes from "prop-types";
 
-export default function AddGoalModal({ isOpen, onClose, onGoalAdded }) {
+export default function AddGoalModal({
+  isOpen,
+  onClose,
+  onGoalAdded,
+  setPoints,
+}) {
   const { token } = useContext(AuthContext);
   const [nombre, setNombre] = useState("");
   const [descripcion, setDescripcion] = useState("");
@@ -40,16 +45,29 @@ export default function AddGoalModal({ isOpen, onClose, onGoalAdded }) {
     const usuario_id = parseJwt(token).id;
 
     try {
-      await agregarMeta(token, {
+      // Agregar la meta al backend y recibir la respuesta con los puntos generados
+      const response = await agregarMeta(token, {
         usuario_id,
-        nombre_meta: nombre, // Cambia a "nombre_meta"
+        nombre_meta: nombre,
         descripcion,
-        fecha_limite: fechaObjetivo, // Cambia a "fecha_limite"
-        monto_objetivo: montoObjetivo, // Cambia a "monto_objetivo"
+        fecha_limite: fechaObjetivo,
+        monto_objetivo: montoObjetivo,
         categoria_meta_id: selectedCategory.value,
       });
-      onGoalAdded();
-      onClose();
+
+      // Si el backend envía los puntos en 'response.puntos', se utiliza ese valor
+      if (response.puntos) {
+        const puntos = response.puntos;
+
+        // Actualizar los puntos del usuario en el frontend
+        setPoints(puntos); // Asegúrate de que setPoints esté recibiendo el valor correcto
+
+        // Llamar a los métodos para cerrar el modal y recargar metas
+        onGoalAdded(puntos);
+        onClose();
+      } else {
+        console.error("No se recibieron puntos en la respuesta del backend.");
+      }
     } catch (error) {
       console.error("Error al agregar meta:", error);
     }
@@ -174,4 +192,5 @@ AddGoalModal.propTypes = {
   isOpen: PropTypes.bool.isRequired,
   onClose: PropTypes.func.isRequired,
   onGoalAdded: PropTypes.func.isRequired,
+  setPoints: PropTypes.func.isRequired, // Añadir esta prop para actualizar los puntos
 };

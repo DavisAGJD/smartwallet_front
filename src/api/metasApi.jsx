@@ -88,3 +88,21 @@ export const eliminarMeta = async (meta_id, token) => {
   }
 };
 
+export const cumplimientoMeta = async (meta_id, token, usuario_id) => {
+  try {
+    const response = await axios.delete(
+      `${import.meta.env.VITE_API_URL}/metas/delete/metaexitosa/${meta_id}`,
+      {
+        headers: { Authorization: `Bearer ${token}` },
+        data: { usuario_id }, // Pasa el usuario_id en el cuerpo de la solicitud
+        "Content-Type": "application/json",
+      }
+    );
+
+    return response.data; // Asegúrate de que `response.data` tenga la estructura correcta
+  } catch (error) {
+    console.error("Error al eliminar la meta:", error);
+    throw error;
+  }
+};
+

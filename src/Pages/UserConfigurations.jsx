@@ -9,6 +9,15 @@ import PaymentModal from "../components/ui/Componentes/Modales/PaymentModal";
 import { obtenerUsuarios, actualizarUsuario } from "../api/usuariosApi";
 import { AuthContext } from "../context/AuthContext";
 
+// Función para calcular los días transcurridos desde una fecha en formato datetime
+const calculateDaysSinceLastLogin = (lastLoginDate) => {
+  const lastLogin = new Date(lastLoginDate);
+  const currentDate = new Date();
+  const timeDifference = currentDate - lastLogin;
+  const daysDifference = Math.floor(timeDifference / (1000 * 3600 * 24)); // Convierte la diferencia en días
+  return daysDifference;
+};
+
 const parseJwt = (token) => {
   try {
     const base64Url = token.split(".")[1];
@@ -33,6 +42,8 @@ export default function UserConfigurations() {
     preferencias: {
       cuenta: "Básica",
     },
+    lastLogin: null, // Agregamos el campo de última actividad
+    racha: 0, // Agregamos el campo de racha
   });
 
   const usuarioId = parseJwt(token)?.id;
@@ -51,6 +62,8 @@ export default function UserConfigurations() {
             preferencias: {
               cuenta: usuario.tipo_suscripcion || "Básica",
             },
+            lastLogin: usuario.lastLogin || null, // Suponemos que la fecha está en formato datetime
+            racha: usuario.racha || 0, // Tomamos la racha desde el usuario
           });
         }
       } catch (error) {
@@ -94,6 +107,49 @@ export default function UserConfigurations() {
     }
   };
 
+  // Llamada a la función para calcular los días de la racha
+  const daysSinceLastLogin = userProfile.lastLogin
+    ? calculateDaysSinceLastLogin(userProfile.lastLogin)
+    : 0;
+
+  const updateRacha = async () => {
+    let newRacha = userProfile.racha;
+
+    // Si la diferencia de días es 1, incrementamos la racha
+    if (daysSinceLastLogin === 1) {
+      newRacha += 1;
+    } else if (daysSinceLastLogin > 1) {
+      // Si la diferencia es mayor a 1, reiniciamos la racha
+      newRacha = 1;
+    }
+
+    // Si la diferencia de días es exactamente 2, asignamos una racha de 2 días
+    if (daysSinceLastLogin === 2) {
+      newRacha = 2;
+    }
+
+    // Actualizamos la racha y lastLogin
+    const payload = {
+      racha: newRacha,
+      lastLogin: new Date().toISOString(),
+    };
+
+    await actualizarUsuario(usuarioId, payload);
+
+    setUserProfile((prevProfile) => ({
+      ...prevProfile,
+      racha: newRacha,
+      lastLogin: new Date().toISOString(),
+    }));
+  };
+
+  // Actualizamos la racha cuando se carga la página
+  useEffect(() => {
+    if (usuarioId && userProfile.lastLogin) {
+      updateRacha();
+    }
+  }, [usuarioId, userProfile.lastLogin]);
+
   return (
     <div className="flex h-screen bg-gray-100">
       <Sidebar />
@@ -107,12 +163,16 @@ export default function UserConfigurations() {
             onEdit={() => openEditModal("Perfil", userProfile.nombre)}
           />
 
-          <h2 className="text-2xl font-bold text-green-700 mt-6">
-            Configuración de cuenta
-          </h2>
-          <p className="text-gray-600 mt-2">
-            Administra tus datos personales y preferencias.
-          </p>
+          <h2 className="text-2xl font-bold text-green-700 mt-6">Configuración de cuenta</h2>
+          <p className="text-gray-600 mt-2">Administra tus datos personales y preferencias.</p>
+
+          {/* Mostrar racha si han pasado más de un día desde la última actividad */}
+          {daysSinceLastLogin >= 0 && (
+            <div className="mt-4 p-4 bg-green-100 rounded-lg">
+              <h3 className="text-lg font-semibold text-green-700">¡Racha Activa!</h3>
+              <p className="text-gray-600">Llevas {userProfile.racha} días consecutivos.</p>
+            </div>
+          )}
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-6">
             <InformationCard
@@ -123,10 +183,7 @@ export default function UserConfigurations() {
                 { label: "Ingresos", value: `$${userProfile.ingresos}` },
               ]}
               onEdit={(label) =>
-                openEditModal(
-                  label === "Correo" ? "email" : label.toLowerCase(),
-                  userProfile[label.toLowerCase()]
-                )
+                openEditModal(label === "Correo" ? "email" : label.toLowerCase(), userProfile[label.toLowerCase()])
               }
             />
             <InformationCard
@@ -134,7 +191,9 @@ export default function UserConfigurations() {
               details={[
                 {
                   label: "Cuenta",
-                  value: (
+                  value: userProfile.preferencias.cuenta === "premium" ? (
+                    <span className="font-semibold text-green-600">{userProfile.preferencias.cuenta}</span>
+                  ) : (
                     <AccountTypeSelect
                       currentAccountType={userProfile.preferencias.cuenta}
                       onChangeAccountType={handleAccountTypeChange}

@@ -4,17 +4,26 @@ import GastosList from "../components/ui/Componentes/GastosList";
 import Header from "../components/ui/Componentes/Header";
 import Sidebar from "../components/ui/Componentes/Sidebar";
 import AddExpenseModal from "../components/ui/Componentes/Modales/AddExpenseModal";
+import SuccessModal from "../components/ui/Componentes/Modales/SuccessModal"; // Importa el nuevo SuccessModal
 
 export default function ExpensesPage() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [refreshExpenses, setRefreshExpenses] = useState(false);
+  const [isSuccessModalOpen, setIsSuccessModalOpen] = useState(false);
+  const [points, setPoints] = useState(0);
 
   const openModal = () => setIsModalOpen(true);
   const closeModal = () => setIsModalOpen(false);
 
-  const handleExpenseAdded = () => {
-    setIsModalOpen(false);
-    setRefreshExpenses(!refreshExpenses);
+  const handleExpenseAdded = (puntosObtenidos) => {
+    setIsModalOpen(false); // Cerrar el modal de agregar gasto
+    setPoints(puntosObtenidos); // Establecer los puntos obtenidos
+    setIsSuccessModalOpen(true); // Abrir el modal de éxito
+  };
+
+  const closeSuccessModal = () => {
+    setIsSuccessModalOpen(false); // Cerrar el modal de éxito
+    setRefreshExpenses(!refreshExpenses); // Refrescar la lista de gastos
   };
 
   return (
@@ -38,8 +47,7 @@ export default function ExpensesPage() {
             </button>
           </div>
 
-            <GastosList refreshExpenses={refreshExpenses} />
-
+          <GastosList refreshExpenses={refreshExpenses} />
         </div>
       </div>
 
@@ -47,6 +55,12 @@ export default function ExpensesPage() {
         isOpen={isModalOpen}
         onClose={closeModal}
         onExpenseAdded={handleExpenseAdded}
+      />
+
+      <SuccessModal
+        isOpen={isSuccessModalOpen}
+        onClose={closeSuccessModal}
+        points={points}
       />
     </div>
   );
