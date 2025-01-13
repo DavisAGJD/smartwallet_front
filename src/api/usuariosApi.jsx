@@ -74,6 +74,26 @@ export const obtenerUsuarios = async () => {
   }
 };
 
+export const obtenerUsuariosPaginados = async (page = 1, limit = 10, searchQuery = "") => {
+  try {
+    const response = await axios.get(
+      `${import.meta.env.VITE_API_URL}/usuarios/paginados`, // Asegúrate de que esta ruta coincida con tu backend
+      {
+        params: {
+          page,       // Página actual
+          limit,      // Límite de elementos por página
+          search: searchQuery, // Término de búsqueda (opcional)
+        },
+      }
+    );
+    return response.data; // Devuelve los datos paginados y los metadatos
+  } catch (error) {
+    console.error("Error al obtener usuarios paginados:", error);
+    throw error;
+  }
+};
+
+
 export const actualizarUsuario = async (usuario_id, payload) => {
   try {
     console.log("Enviando datos a la API:", payload);
