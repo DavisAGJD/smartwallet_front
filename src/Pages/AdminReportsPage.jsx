@@ -76,7 +76,10 @@ export default function AdminReportsPage() {
   // Configuración de paginación
   const indexOfLastReport = currentPage * reportsPerPage;
   const indexOfFirstReport = indexOfLastReport - reportsPerPage;
-  const currentReports = filteredReports.slice(indexOfFirstReport, indexOfLastReport);
+  const currentReports = filteredReports.slice(
+    indexOfFirstReport,
+    indexOfLastReport
+  );
   const totalPages = Math.ceil(filteredReports.length / reportsPerPage);
 
   const paginate = (pageNumber) => setCurrentPage(pageNumber);
@@ -118,13 +121,15 @@ export default function AdminReportsPage() {
           </ScrollArea>
 
           {/* Paginación actualizada */}
-          <div className="flex justify-center mt-4">
+          <div className="flex justify-center mt-4 space-x-2">
             {Array.from({ length: totalPages }, (_, i) => (
               <button
                 key={i + 1}
                 onClick={() => paginate(i + 1)}
-                className={`px-3 py-1 mx-1 rounded-md ${
-                  currentPage === i + 1 ? "bg-blue-500 text-white" : "bg-gray-200"
+                className={`px-4 py-2 rounded-md text-sm font-medium transition-colors ${
+                  currentPage === i + 1
+                    ? "bg-red-500 text-white hover:bg-red-600"
+                    : "bg-gray-100 text-gray-700 hover:bg-gray-200"
                 }`}
               >
                 {i + 1}
@@ -144,10 +149,16 @@ export default function AdminReportsPage() {
                 Esta acción no se puede deshacer.
               </p>
               <div className="flex justify-end space-x-2">
-                <Button onClick={closeConfirmModal} className="bg-gray-300 hover:bg-gray-400">
+                <Button
+                  onClick={closeConfirmModal}
+                  className="bg-gray-300 hover:bg-gray-400"
+                >
                   Cancelar
                 </Button>
-                <Button onClick={handleDelete} className="bg-red-500 text-white hover:bg-red-600">
+                <Button
+                  onClick={handleDelete}
+                  className="bg-red-500 text-white hover:bg-red-600"
+                >
                   Eliminar
                 </Button>
               </div>
