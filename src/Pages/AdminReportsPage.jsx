@@ -88,7 +88,7 @@ export default function AdminReportsPage() {
     startPage = Math.max(1, endPage - maxPageButtons + 1);
   }
 
-  // Genera el arreglo de números de página a mostrar
+  // Arreglo de números de página a mostrar
   const pageNumbers = [];
   for (let i = startPage; i <= endPage; i++) {
     pageNumbers.push(i);
@@ -139,28 +139,28 @@ export default function AdminReportsPage() {
             </div>
           </ScrollArea>
 
-          {/* Sección de paginación */}
-          <div className="flex items-center justify-center mt-4 space-x-2">
+          {/* Sección de paginación con diseño similar al de tu otro código */}
+          <div className="flex items-center justify-center mt-6 space-x-2">
             <Button
               onClick={handlePrevPage}
               disabled={currentPage === 1}
-              className="px-3 py-1 rounded-md bg-gray-200 hover:bg-gray-300"
+              className="px-4 py-2 bg-gray-200 rounded-md hover:bg-gray-300"
             >
               Anterior
             </Button>
 
             {startPage > 1 && (
-              <span className="px-3 py-1">...</span>
+              <span className="px-3 py-2 text-gray-600">...</span>
             )}
 
             {pageNumbers.map((number) => (
               <Button
                 key={number}
                 onClick={() => paginate(number)}
-                className={`px-3 py-1 rounded-md ${
+                className={`px-4 py-2 rounded-md ${
                   currentPage === number
-                    ? "bg-blue-500 text-white"
-                    : "bg-gray-200 hover:bg-gray-300"
+                    ? "bg-red-500 text-white"
+                    : "bg-gray-200 hover:bg-gray-300 text-gray-700"
                 }`}
               >
                 {number}
@@ -168,13 +168,13 @@ export default function AdminReportsPage() {
             ))}
 
             {endPage < totalPages && (
-              <span className="px-3 py-1">...</span>
+              <span className="px-3 py-2 text-gray-600">...</span>
             )}
 
             <Button
               onClick={handleNextPage}
               disabled={currentPage === totalPages}
-              className="px-3 py-1 rounded-md bg-gray-200 hover:bg-gray-300"
+              className="px-4 py-2 bg-gray-200 rounded-md hover:bg-gray-300"
             >
               Siguiente
             </Button>
@@ -194,13 +194,13 @@ export default function AdminReportsPage() {
               <div className="flex justify-end space-x-2">
                 <Button
                   onClick={closeConfirmModal}
-                  className="bg-gray-300 hover:bg-gray-400"
+                  className="px-4 py-2 bg-gray-200 rounded-md hover:bg-gray-300"
                 >
                   Cancelar
                 </Button>
                 <Button
                   onClick={handleDelete}
-                  className="bg-red-500 text-white hover:bg-red-600"
+                  className="px-4 py-2 bg-red-500 text-white rounded-md hover:bg-red-600"
                 >
                   Eliminar
                 </Button>
