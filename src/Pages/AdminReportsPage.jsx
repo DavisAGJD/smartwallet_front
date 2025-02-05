@@ -73,16 +73,21 @@ export default function AdminReportsPage() {
     }
   };
 
-  // Configuración de paginación
+  // Cálculo para la paginación
   const indexOfLastReport = currentPage * reportsPerPage;
   const indexOfFirstReport = indexOfLastReport - reportsPerPage;
-  const currentReports = filteredReports.slice(
-    indexOfFirstReport,
-    indexOfLastReport
-  );
+  const currentReports = filteredReports.slice(indexOfFirstReport, indexOfLastReport);
   const totalPages = Math.ceil(filteredReports.length / reportsPerPage);
 
   const paginate = (pageNumber) => setCurrentPage(pageNumber);
+
+  const handlePrevPage = () => {
+    if (currentPage > 1) setCurrentPage(currentPage - 1);
+  };
+
+  const handleNextPage = () => {
+    if (currentPage < totalPages) setCurrentPage(currentPage + 1);
+  };
 
   return (
     <div className="flex h-screen bg-gray-100">
@@ -93,7 +98,6 @@ export default function AdminReportsPage() {
         <div className="bg-white rounded-lg p-6 shadow-md">
           <div className="flex flex-col space-y-4 mb-4">
             <h1 className="text-xl font-semibold">Reportes</h1>
-
             <div className="relative">
               <Input
                 type="text"
@@ -120,25 +124,37 @@ export default function AdminReportsPage() {
             </div>
           </ScrollArea>
 
-          {/* Paginación actualizada */}
-          <div className="flex justify-center mt-4 space-x-2">
+          {/* Sección de paginación */}
+          <div className="flex items-center justify-center mt-4 space-x-2">
+            <Button
+              onClick={handlePrevPage}
+              disabled={currentPage === 1}
+              className="px-3 py-1 rounded-md bg-gray-200 hover:bg-gray-300"
+            >
+              Anterior
+            </Button>
             {Array.from({ length: totalPages }, (_, i) => (
-              <button
+              <Button
                 key={i + 1}
                 onClick={() => paginate(i + 1)}
-                className={`px-4 py-2 rounded-md text-sm font-medium transition-colors ${
-                  currentPage === i + 1
-                    ? "bg-red-500 text-white hover:bg-red-600"
-                    : "bg-gray-100 text-gray-700 hover:bg-gray-200"
+                className={`px-3 py-1 rounded-md ${
+                  currentPage === i + 1 ? "bg-blue-500 text-white" : "bg-gray-200 hover:bg-gray-300"
                 }`}
               >
                 {i + 1}
-              </button>
+              </Button>
             ))}
+            <Button
+              onClick={handleNextPage}
+              disabled={currentPage === totalPages}
+              className="px-3 py-1 rounded-md bg-gray-200 hover:bg-gray-300"
+            >
+              Siguiente
+            </Button>
           </div>
         </div>
 
-        {/* Modal de confirmación */}
+        {/* Modal de confirmación para eliminar */}
         {isConfirmModalOpen && (
           <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
             <div className="bg-white p-6 rounded-lg shadow-lg w-96">
