@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { obtenerReportes, eliminarReporte } from "../api/reportesApi"; // Asegúrate de tener `eliminarReporte` en `reportesApi`
+import { obtenerReportes, eliminarReporte } from "../api/reportesApi";
 import { Input } from "../components/ui/input";
 import ScrollArea from "../components/ui/Componentes/scroll-area";
 import HeaderAdmin from "../components/ui/Componentes/HeaderAdmin";
@@ -18,7 +18,6 @@ export default function AdminReportsPage() {
   const [currentPage, setCurrentPage] = useState(1);
   const reportsPerPage = 5;
 
-  // Obtener los reportes desde el backend
   useEffect(() => {
     const fetchReports = async () => {
       try {
@@ -33,7 +32,6 @@ export default function AdminReportsPage() {
     fetchReports();
   }, []);
 
-  // Función de búsqueda
   const handleSearch = (event) => {
     const term = event.target.value;
     setSearchTerm(term);
@@ -45,26 +43,23 @@ export default function AdminReportsPage() {
     } else {
       setFilteredReports(reports);
     }
-    setCurrentPage(1); // Reiniciar la página cuando se realiza una búsqueda
+    setCurrentPage(1);
   };
 
-  // Función para abrir el modal de confirmación de eliminación
   const openConfirmModal = (id) => {
     setReportToDelete(id);
     setIsConfirmModalOpen(true);
   };
 
-  // Función para cerrar el modal de confirmación de eliminación
   const closeConfirmModal = () => {
     setReportToDelete(null);
     setIsConfirmModalOpen(false);
   };
 
-  // Función para manejar la eliminación de un reporte
   const handleDelete = async () => {
     try {
       if (reportToDelete) {
-        await eliminarReporte(reportToDelete); // Asegúrate de que `eliminarReporte` esté implementado en `reportesApi`
+        await eliminarReporte(reportToDelete);
         setReports((prevReports) =>
           prevReports.filter((report) => report.reporte_id !== reportToDelete)
         );
@@ -82,10 +77,9 @@ export default function AdminReportsPage() {
   const indexOfLastReport = currentPage * reportsPerPage;
   const indexOfFirstReport = indexOfLastReport - reportsPerPage;
   const currentReports = filteredReports.slice(indexOfFirstReport, indexOfLastReport);
+  const totalPages = Math.ceil(filteredReports.length / reportsPerPage);
 
   const paginate = (pageNumber) => setCurrentPage(pageNumber);
-
-  const totalPages = Math.ceil(filteredReports.length / reportsPerPage);
 
   return (
     <div className="flex h-screen bg-gray-100">
@@ -97,7 +91,6 @@ export default function AdminReportsPage() {
           <div className="flex flex-col space-y-4 mb-4">
             <h1 className="text-xl font-semibold">Reportes</h1>
 
-            {/* Barra de búsqueda */}
             <div className="relative">
               <Input
                 type="text"
@@ -113,30 +106,28 @@ export default function AdminReportsPage() {
             <div className="space-y-4">
               {currentReports.map((report) => (
                 <CardReport
-                  key={report.reporte_id} // Usa un ID único
+                  key={report.reporte_id}
                   titulo={report.titulo}
                   descripcion={report.descripcion}
                   fecha_creacion={report.fecha_creacion}
-                  onDelete={() => openConfirmModal(report.reporte_id)} // Abre el modal de confirmación
+                  onDelete={() => openConfirmModal(report.reporte_id)}
                 />
               ))}
-              {currentReports.length === 0 && (
-                <p>No se encontraron reportes</p>
-              )}
+              {currentReports.length === 0 && <p>No se encontraron reportes</p>}
             </div>
           </ScrollArea>
 
-          {/* Paginación */}
-          <div className="flex justify-center mt-4 space-x-2">
-            {[...Array(totalPages)].map((_, index) => (
+          {/* Paginación actualizada */}
+          <div className="flex justify-center mt-4">
+            {Array.from({ length: totalPages }, (_, i) => (
               <button
-                key={index + 1}
-                onClick={() => paginate(index + 1)}
-                className={`px-3 py-1 rounded-md ${
-                  currentPage === index + 1 ? "bg-blue-500 text-white" : "bg-gray-200"
+                key={i + 1}
+                onClick={() => paginate(i + 1)}
+                className={`px-3 py-1 mx-1 rounded-md ${
+                  currentPage === i + 1 ? "bg-blue-500 text-white" : "bg-gray-200"
                 }`}
               >
-                {index + 1}
+                {i + 1}
               </button>
             ))}
           </div>
