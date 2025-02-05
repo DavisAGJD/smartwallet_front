@@ -79,6 +79,21 @@ export default function AdminReportsPage() {
   const currentReports = filteredReports.slice(indexOfFirstReport, indexOfLastReport);
   const totalPages = Math.ceil(filteredReports.length / reportsPerPage);
 
+  // Lógica para mostrar solo 5 botones de página
+  const maxPageButtons = 5;
+  let startPage = Math.max(1, currentPage - Math.floor(maxPageButtons / 2));
+  let endPage = startPage + maxPageButtons - 1;
+  if (endPage > totalPages) {
+    endPage = totalPages;
+    startPage = Math.max(1, endPage - maxPageButtons + 1);
+  }
+
+  // Genera el arreglo de números de página a mostrar
+  const pageNumbers = [];
+  for (let i = startPage; i <= endPage; i++) {
+    pageNumbers.push(i);
+  }
+
   const paginate = (pageNumber) => setCurrentPage(pageNumber);
 
   const handlePrevPage = () => {
@@ -133,17 +148,29 @@ export default function AdminReportsPage() {
             >
               Anterior
             </Button>
-            {Array.from({ length: totalPages }, (_, i) => (
+
+            {startPage > 1 && (
+              <span className="px-3 py-1">...</span>
+            )}
+
+            {pageNumbers.map((number) => (
               <Button
-                key={i + 1}
-                onClick={() => paginate(i + 1)}
+                key={number}
+                onClick={() => paginate(number)}
                 className={`px-3 py-1 rounded-md ${
-                  currentPage === i + 1 ? "bg-blue-500 text-white" : "bg-gray-200 hover:bg-gray-300"
+                  currentPage === number
+                    ? "bg-blue-500 text-white"
+                    : "bg-gray-200 hover:bg-gray-300"
                 }`}
               >
-                {i + 1}
+                {number}
               </Button>
             ))}
+
+            {endPage < totalPages && (
+              <span className="px-3 py-1">...</span>
+            )}
+
             <Button
               onClick={handleNextPage}
               disabled={currentPage === totalPages}
