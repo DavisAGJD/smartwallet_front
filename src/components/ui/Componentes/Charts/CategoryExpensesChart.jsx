@@ -1,7 +1,38 @@
 import PropTypes from "prop-types";
-import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, Cell, Legend } from "recharts";
+import { useState } from "react";
+import { 
+  BarChart, 
+  Bar, 
+  XAxis, 
+  YAxis, 
+  Tooltip, 
+  ResponsiveContainer, 
+  Cell, 
+  Legend 
+} from "recharts";
 
 const CategoryExpensesChart = ({ data }) => {
+  const itemsPerSlide = 4; // Número de categorías por slide
+  const [currentSlide, setCurrentSlide] = useState(0);
+
+  const totalSlides = Math.ceil(data.length / itemsPerSlide);
+
+  const handlePrev = () => {
+    if (currentSlide > 0) {
+      setCurrentSlide(currentSlide - 1);
+    }
+  };
+
+  const handleNext = () => {
+    if (currentSlide < totalSlides - 1) {
+      setCurrentSlide(currentSlide + 1);
+    }
+  };
+
+  // Extraer los datos del slide actual
+  const startIndex = currentSlide * itemsPerSlide;
+  const currentData = data.slice(startIndex, startIndex + itemsPerSlide);
+
   // Definición de gradientes
   const gradientColors = [
     { id: "gradient1", start: "#8b5cf6", end: "#6d28d9" },
@@ -10,11 +41,11 @@ const CategoryExpensesChart = ({ data }) => {
     { id: "gradient4", start: "#ef4444", end: "#b91c1c" },
   ];
 
-  // Leyenda personalizada centrada con representación de gradientes
+  // Leyenda personalizada centrada con representación de gradientes (sólo de los datos actuales)
   const renderLegend = () => (
     <div style={{ display: "flex", justifyContent: "center", alignItems: "center", marginTop: 10 }}>
       <ul style={{ display: "flex", listStyleType: "none", padding: 0, gap: "15px" }}>
-        {data.map((entry, index) => (
+        {currentData.map((entry, index) => (
           <li key={`item-${index}`} style={{ display: "flex", alignItems: "center" }}>
             <svg width="14" height="14">
               <defs>
@@ -33,28 +64,69 @@ const CategoryExpensesChart = ({ data }) => {
   );
 
   return (
-    <ResponsiveContainer width="100%" height={300}>
-      <BarChart data={data}>
-        {/* Definición de gradientes para cada barra */}
-        <defs>
-          {gradientColors.map((gradient) => (
-            <linearGradient key={gradient.id} id={gradient.id} x1="0" y1="0" x2="1" y2="1">
-              <stop offset="0%" stopColor={gradient.start} stopOpacity={0.8} />
-              <stop offset="100%" stopColor={gradient.end} stopOpacity={1} />
-            </linearGradient>
-          ))}
-        </defs>
-        <XAxis dataKey="name" />
-        <YAxis />
-        <Tooltip formatter={(value) => [`$${value}`, "Monto"]} labelFormatter={(label) => `Categoría: ${label}`} />
-        <Legend content={renderLegend} /> {/* Usar la leyenda personalizada */}
-        <Bar dataKey="amount" name="Monto" fill="#8884d8">
-          {data.map((entry, index) => (
-            <Cell key={`cell-${index}`} fill={`url(#${gradientColors[index % gradientColors.length].id})`} />
-          ))}
-        </Bar>
-      </BarChart>
-    </ResponsiveContainer>
+    <div>
+      {/* Controles del carrusel */}
+      <div style={{ display: "flex", justifyContent: "space-between", marginBottom: "10px" }}>
+        <button
+          onClick={handlePrev}
+          disabled={currentSlide === 0}
+          style={{
+            padding: "5px 10px",
+            background: "#ccc",
+            border: "none",
+            borderRadius: "4px",
+            cursor: "pointer"
+          }}
+        >
+          Prev
+        </button>
+        <span>
+          Slide {currentSlide + 1} de {totalSlides}
+        </span>
+        <button
+          onClick={handleNext}
+          disabled={currentSlide >= totalSlides - 1}
+          style={{
+            padding: "5px 10px",
+            background: "#ccc",
+            border: "none",
+            borderRadius: "4px",
+            cursor: "pointer"
+          }}
+        >
+          Next
+        </button>
+      </div>
+
+      <ResponsiveContainer width="100%" height={300}>
+        <BarChart data={currentData}>
+          {/* Definición de gradientes para cada barra */}
+          <defs>
+            {gradientColors.map((gradient) => (
+              <linearGradient key={gradient.id} id={gradient.id} x1="0" y1="0" x2="1" y2="1">
+                <stop offset="0%" stopColor={gradient.start} stopOpacity={0.8} />
+                <stop offset="100%" stopColor={gradient.end} stopOpacity={1} />
+              </linearGradient>
+            ))}
+          </defs>
+          <XAxis dataKey="name" />
+          <YAxis />
+          <Tooltip 
+            formatter={(value) => [`$${value}`, "Monto"]} 
+            labelFormatter={(label) => `Categoría: ${label}`} 
+          />
+          <Legend content={renderLegend} />
+          <Bar dataKey="amount" name="Monto">
+            {currentData.map((entry, index) => (
+              <Cell
+                key={`cell-${index}`}
+                fill={`url(#${gradientColors[index % gradientColors.length].id})`}
+              />
+            ))}
+          </Bar>
+        </BarChart>
+      </ResponsiveContainer>
+    </div>
   );
 };
 
