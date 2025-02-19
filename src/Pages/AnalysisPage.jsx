@@ -1,7 +1,7 @@
 import { useState, useEffect, useContext } from "react";
 import Sidebar from "../components/ui/Componentes/Sidebar";
 import Header from "../components/ui/Componentes/Header";
-import CategoryExpensesCarousel from "../components/ui/Componentes/Charts/CategoryExpensesChart";
+import CategoryExpensesChart from "../components/ui/Componentes/Charts/CategoryExpensesChart";
 import ExpensesDistributionChart from "../components/ui/Componentes/Charts/ExpensesDistributionChart";
 import IncomeExpensesPieChart from "../components/ui/Componentes/Charts/IncomeExpensesPieChart";
 import GoalProgressChart from "../components/ui/Componentes/Charts/GoalProgressChart";
@@ -16,7 +16,7 @@ export default function AnalysisPage() {
   const [totalExpenses, setTotalExpenses] = useState(0);
   const [expenseData, setExpenseData] = useState([]);
   const [expenseCategories, setExpenseCategories] = useState([]);
-  const [goals, setGoals] = useState([]);
+  const [goals, setGoals] = useState([]); // Inicializa como array vacío
 
   const parseJwt = (token) => {
     try {
@@ -62,13 +62,11 @@ export default function AnalysisPage() {
           return acc;
         }, {});
 
-        // Convertir a un array de objetos con nombre y monto
-        const categoriesData = Object.values(groupedExpenses).map((item) => ({
-          name: item.nombre,
-          amount: item.monto,
-        }));
+        const categoriesData = Object.values(groupedExpenses)
+          .sort((a, b) => b.monto - a.monto)
+          .slice(0, 4)
+          .map((item) => ({ name: item.nombre, amount: item.monto }));
 
-        // Datos para la gráfica de pastel u otra visualización, si es necesario
         const pieData = categoriesData.map((category) => ({
           name: category.name,
           value: category.amount,
@@ -82,35 +80,34 @@ export default function AnalysisPage() {
     };
 
     const fetchGoals = async () => {
-      if (!usuario_id || !token) {
-        console.warn("Token o usuarioId no disponible");
-        return;
-      }
-      try {
-        const metasUsuario = await obtenerMetasPorUsuario(usuario_id, token);
-        if (metasUsuario && Array.isArray(metasUsuario)) {
-          const metasConvertidas = metasUsuario.map((meta) => ({
-            name: meta.nombre_meta || "Meta sin nombre",
-            targetAmount: Number(meta.monto_objetivo) || 0,
-            amountAchieved: Number(meta.monto_actual) || 0,
-          }));
-          setGoals(metasConvertidas);
-        } else {
-          console.warn(
-            "No se obtuvieron metas o el formato de respuesta no es correcto"
-          );
+        if (!usuario_id || !token) {
+          console.warn("Token o usuarioId no disponible");
+          return;
+        }
+        try {
+          const metasUsuario = await obtenerMetasPorUsuario(usuario_id, token);
+          if (metasUsuario && Array.isArray(metasUsuario)) {
+            const metasConvertidas = metasUsuario.map((meta) => ({
+              name: meta.nombre_meta || "Meta sin nombre", 
+              targetAmount: Number(meta.monto_objetivo) || 0, 
+              amountAchieved: Number(meta.monto_actual) || 0, 
+            }));
+            setGoals(metasConvertidas);
+          } else {
+            console.warn("No se obtuvieron metas o el formato de respuesta no es correcto");
+            setGoals([]);
+          }
+        } catch (error) {
+          console.error("Error al obtener las metas:", error);
           setGoals([]);
         }
-      } catch (error) {
-        console.error("Error al obtener las metas:", error);
-        setGoals([]);
-      }
-    };
+      };
+      
 
     if (usuario_id) {
       fetchIncome();
       fetchExpenses();
-      fetchGoals();
+      fetchGoals(); // Llamada para cargar las metas
     }
   }, [token, usuario_id]);
 
@@ -131,7 +128,7 @@ export default function AnalysisPage() {
               <h2 className="text-lg font-semibold mb-4">
                 Gastos por Categoría
               </h2>
-              <CategoryExpensesCarousel data={expenseCategories} />
+              <CategoryExpensesChart data={expenseCategories} />
             </div>
 
             <div className="bg-white p-6 rounded-lg shadow-lg">
