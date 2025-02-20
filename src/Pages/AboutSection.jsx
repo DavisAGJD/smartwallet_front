@@ -1,15 +1,12 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { useNavigate } from 'react-router-dom';
 import { ChevronRight, Users, BookOpen, BarChart3 } from 'lucide-react';
 import { motion } from 'framer-motion';
 import Navbar from '../components/ui/Componentes/Navbar';
-import InfoModal from '../components/ui/Componentes/Modales/InfoModal'; // Importar el modal
+import InfoModal from '../components/ui/Componentes/Modales/InfoModal';
 import Footer from '../components/ui/Componentes/Footer';
 
 export default function AboutSection() {
-  const navigate = useNavigate();
-
   const fadeInUp = {
     hidden: { opacity: 0, y: 20 },
     visible: { opacity: 1, y: 0, transition: { duration: 0.6 } },
@@ -20,7 +17,7 @@ export default function AboutSection() {
       <Navbar />
       <section className="w-full bg-white">
         <motion.div
-          className="relative h-[400px] w-full flex items-center justify-center"
+          className="relative h-[300px] md:h-[400px] w-full flex items-center justify-center"
           style={{
             backgroundImage: `linear-gradient(to right, rgba(255, 255, 255, 0.9), rgba(255, 255, 255, 0.7)), url(/img/AboutUs-Fonfo.jpg)`,
             backgroundSize: "cover",
@@ -32,21 +29,21 @@ export default function AboutSection() {
           animate="visible"
           variants={fadeInUp}
         >
-          <h1 className="text-4xl md:text-5xl font-bold text-black text-center">
+          <h1 className="text-3xl md:text-4xl lg:text-5xl font-bold text-black text-center">
             Sobre SmartWallet
           </h1>
         </motion.div>
 
         <motion.div
-          className="container mx-auto px-4 py-16"
+          className="container mx-auto px-4 py-12 md:py-16"
           initial="hidden"
           animate="visible"
           variants={fadeInUp}
         >
-          <h2 className="text-3xl font-bold text-center text-gray-900 mb-12">
-            Conocenos mejor
+          <h2 className="text-2xl md:text-3xl font-bold text-center text-gray-900 mb-8 md:mb-12">
+            Conócenos mejor
           </h2>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-8">
             <AboutCard
               icon={<Users className="h-8 w-8 text-teal-600" />}
               title="Nuestra Misión"
@@ -66,7 +63,6 @@ export default function AboutSection() {
               modalContent="Nuestro equipo está compuesto por expertos en tecnología y finanzas comprometidos en ofrecer las mejores experiencias y productos a nuestros usuarios."
             />
           </div>
-
         </motion.div>
         <Footer />
       </section>
@@ -83,7 +79,7 @@ function AboutCard({ icon, title, description, modalContent }) {
   return (
     <>
       <motion.div
-        className="flex flex-col h-full bg-white shadow-md rounded-lg p-6"
+        className="flex flex-col h-full bg-white shadow-md rounded-lg p-6 hover:shadow-lg transition-shadow duration-300"
         initial="hidden"
         animate="visible"
         variants={{
@@ -94,7 +90,7 @@ function AboutCard({ icon, title, description, modalContent }) {
         <div className="w-12 h-12 rounded-full bg-teal-100 flex items-center justify-center mb-4">
           {icon}
         </div>
-        <h3 className="text-xl font-semibold">{title}</h3>
+        <h3 className="text-xl font-semibold mb-2">{title}</h3>
         <p className="text-gray-600 mb-4">{description}</p>
         <button
           onClick={handleOpenModal}
@@ -104,7 +100,6 @@ function AboutCard({ icon, title, description, modalContent }) {
         </button>
       </motion.div>
 
-      {/* Modal */}
       <InfoModal
         isOpen={isModalOpen}
         onClose={handleCloseModal}
